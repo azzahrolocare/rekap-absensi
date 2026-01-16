@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rekap Absensi Digital - Az-Zahro</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <style>
+        :root { --primary: #2c3e50; --accent: #3498db; --success: #2ecc71; --warning: #f1c40f; --danger: #e74c3c; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f7f6; margin: 0; padding: 20px; }
+        .container { max-width: 1100px; margin: auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: var(--primary); margin: 0; }
+        .subtitle { text-align: center; color: #7f8c8d; margin-bottom: 25px; font-size: 0.9em; }
+        .controls { margin-bottom: 20px; }
+        select { width: 100%; padding: 12px; border-radius: 8px; border: 2px solid #ddd; font-size: 16px; cursor: pointer; background: white; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; border: 1px solid #eee; font-size: 14px; }
+        th { background: var(--primary); color: white; padding: 12px; position: sticky; top: 0; }
+        td { padding: 10px; border-bottom: 1px solid #eee; text-align: center; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+        .name-col { text-align: left; font-weight: 500; min-width: 180px; }
+        .label-a { color: var(--danger); font-weight: bold; }
+        .label-s { color: var(--warning); font-weight: bold; }
+        .label-i { color: var(--success); font-weight: bold; }
+        .label-hadir { color: var(--primary); font-weight: bold; }
+        .label-persen { font-weight: bold; color: #2980b9; }
+        .loading { text-align: center; font-style: italic; color: var(--accent); padding: 20px; }
+        .error-msg { text-align: center; color: var(--danger); background: #fdf2f2; padding: 15px; border-radius: 8px; border: 1px solid #f9d7d7; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>REKAP ABSENSI SISWA</h2>
+    <p class="subtitle">SMP ISLAM AZ-ZAHRO & SMK AZ-ZAHRO</p>
+    
+    <div class="controls">
+        <label for="pilihKelas" style="display:block; margin-bottom:8px; font-weight:bold;">Pilih Jenjang Kelas:</label>
+        <select id="pilihKelas" onchange="muatData()">
+            <option value="1462101133">KELAS VII</option>
+            <option value="1467004494">KELAS VIII</option>
+            <option value="1595738719">KELAS IX</option>
+            <option value="881704821">KELAS X</option>
+            <option value="811189715">KELAS XI</option>
+            <option value="2001221833">KELAS XII</option>
+        </select>
+    </div>
+
+    <div id="status"></div>
+    <div id="tabelHasil"></div>
+</div>
+
+<script>
+    const ssID = '1XaVh_Jnbvryl216Mofuecx7DxNBezU3kRg8ZHjwu1qY'; 
+
+    function muatData() {
+        const gid = document.getElementById('pilihKelas').value;
+        const statusEl = document.getElementById('status');
+        const tabelEl = document.getElementById('tabelHasil');
+        
+        statusEl.innerHTML = "<div class='loading'>Menghubungkan ke database...</div>";
+        tabelEl.innerHTML = "";
+
+        const url = `https://docs.google.com/spreadsheets/d/${ssID}/export?format=csv&gid=${gid}&t=${new Date().getTime()}`;
+
+        Papa.parse(url, {
+            download: true,
+            header: false,
+            complete: function(results) {
+                const rows = results.data;
+                
+                if (rows.length < 8) {
+                    statusEl.innerHTML = "<div class='error-msg'>Data pada sheet ini tidak ditemukan atau format tidak sesuai.</div>";
+                    return;
+                }
+
+                // Ambil baris ke-7 (index 6) untuk mendeteksi hari Minggu (warna merah/teks tertentu)
+                // Di sistem CSV, kita asumsikan hari Minggu adalah kolom yang biasanya kosong atau ditandai khusus
+                const dataSiswa = rows.slice(7); 
+                tampilkanTabel(dataSiswa);
+                statusEl.innerHTML = "";
+            },
+            error: function(err) {
+                statusEl.innerHTML = `<div class='error-msg'><strong>Gagal Mengambil Data</strong><br>Pastikan akses Google Sheet: Bagikan > Siapa saja yang memiliki link.</div>`;
+            }
+        });
+    }
+
+    function tampilkanTabel(data) {
+        let html = `<table>
+            <thead>
+                <tr>
+                    <th width="40">No</th>
+                    <th>Nama Siswa</th>
+                    <th width="40">A</th>
+                    <th width="40">S</th>
+                    <th width="40">I</th>
+                    <th width="70">Hadir</th>
+                    <th width="80">% Hadir</th>
+                </tr>
+            </thead>
+            <tbody>`;
+
+        let counter = 0;
+        data.forEach((row) => {
+            const no = row[0];   
+            const nama = row[1]; 
+            
+            if (no && nama && !isNaN(no.trim()) && no.trim() !== "") {
+                counter++;
+                let a = 0, s = 0, i = 0, hadir = 0;
+                let hariEfektif = 0;
+
+                // Loop Kolom D (index 3) sampai AH (index 33)
+                for (let j = 3; j <= 33; j++) {
+                    let val = (row[j] || "").toString().trim().toUpperCase();
+                    
+                    // Kita asumsikan kolom yang diisi (baik titik atau huruf) adalah hari sekolah
+                    if (val !== "") {
+                        hariEfektif++;
+                        if (val === 'A') a++;
+                        else if (val === 'S') s++;
+                        else if (val === 'I') i++;
+                        else {
+                            // Jika berisi titik (.) atau tanda lain dianggap hadir
+                            hadir++;
+                        }
+                    }
+                }
+
+                // Hitung persentase
+                let persen = hariEfektif > 0 ? ((hadir / hariEfektif) * 100).toFixed(1) : 0;
+
+                html += `<tr>
+                    <td>${no}</td>
+                    <td class="name-col">${nama}</td>
+                    <td class="label-a">${a}</td>
+                    <td class="label-s">${s}</td>
+                    <td class="label-i">${i}</td>
+                    <td class="label-hadir">${hadir}</td>
+                    <td class="label-persen">${persen}%</td>
+                </tr>`;
+            }
+        });
+
+        html += '</tbody></table>';
+        
+        if (counter === 0) {
+            document.getElementById('tabelHasil').innerHTML = "<div class='error-msg'>Tidak ada data siswa ditemukan.</div>";
+        } else {
+            document.getElementById('tabelHasil').innerHTML = html;
+        }
+    }
+
+    window.onload = muatData;
+</script>
+
+</body>
+</html>
