@@ -2,45 +2,79 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=1100">
     <title>Rekap Absensi Digital - Az-Zahro</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <style>
         :root { --primary: #2c3e50; --accent: #3498db; --success: #2ecc71; --warning: #f1c40f; --danger: #e74c3c; }
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f7f6; margin: 0; padding: 20px; }
-        .container { max-width: 1100px; margin: auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        
+        body { 
+            font-family: 'Segoe UI', Arial, sans-serif; 
+            background: #f4f7f6; 
+            margin: 0; 
+            padding: 20px;
+            /* Memastikan body tidak menyusut lebih kecil dari desain desktop */
+            min-width: 1100px; 
+        }
+
+        .container { 
+            width: 1050px; /* Ukuran tetap (fixed width) seperti desktop */
+            margin: auto; 
+            background: white; 
+            padding: 25px; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+        }
+
         h2 { text-align: center; color: var(--primary); margin: 0; }
         .subtitle { text-align: center; color: #7f8c8d; margin-bottom: 25px; font-size: 0.9em; }
-        .controls { margin-bottom: 20px; }
-        select { width: 100%; padding: 12px; border-radius: 8px; border: 2px solid #ddd; font-size: 16px; cursor: pointer; background: white; margin-bottom: 10px; }
         
-        /* Gaya untuk tombol link baru */
+        .controls { 
+            margin-bottom: 20px; 
+            display: flex; 
+            align-items: flex-end; 
+            gap: 15px; /* Tampilan tombol dan select sejajar menyamping seperti di desktop */
+        }
+
+        .select-group { flex: 1; }
+
+        select { 
+            width: 100%; 
+            padding: 12px; 
+            border-radius: 8px; 
+            border: 2px solid #ddd; 
+            font-size: 16px; 
+            cursor: pointer; 
+            background: white; 
+        }
+        
         .btn-database {
-            display: block;
+            display: inline-block;
             text-align: center;
             background-color: var(--success);
             color: white;
             text-decoration: none;
-            padding: 10px;
+            padding: 12px 25px;
             border-radius: 8px;
             font-weight: bold;
             font-size: 14px;
+            white-space: nowrap;
             transition: background 0.3s;
         }
-        .btn-database:hover {
-            background-color: #27ae60;
-        }
+        .btn-database:hover { background-color: #27ae60; }
 
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; border: 1px solid #eee; font-size: 14px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; border: 1px solid #eee; font-size: 14px; table-layout: fixed; }
         th { background: var(--primary); color: white; padding: 12px; position: sticky; top: 0; }
-        td { padding: 10px; border-bottom: 1px solid #eee; text-align: center; }
+        td { padding: 10px; border-bottom: 1px solid #eee; text-align: center; overflow: hidden; text-overflow: ellipsis; }
         tr:nth-child(even) { background-color: #f9f9f9; }
-        .name-col { text-align: left; font-weight: 500; min-width: 180px; }
+        
+        .name-col { text-align: left; font-weight: 500; width: 300px; }
         .label-a { color: var(--danger); font-weight: bold; }
         .label-s { color: var(--warning); font-weight: bold; }
         .label-i { color: var(--success); font-weight: bold; }
         .label-hadir { color: var(--primary); font-weight: bold; }
         .label-persen { font-weight: bold; color: #2980b9; }
+        
         .loading { text-align: center; font-style: italic; color: var(--accent); padding: 20px; }
         .error-msg { text-align: center; color: var(--danger); background: #fdf2f2; padding: 15px; border-radius: 8px; border: 1px solid #f9d7d7; }
     </style>
@@ -52,18 +86,20 @@
     <p class="subtitle">SMP ISLAM AZ-ZAHRO & SMK AZ-ZAHRO</p>
     
     <div class="controls">
-        <label for="pilihKelas" style="display:block; margin-bottom:8px; font-weight:bold;">Pilih Jenjang Kelas:</label>
-        <select id="pilihKelas" onchange="muatData()">
-            <option value="1462101133">KELAS VII</option>
-            <option value="1467004494">KELAS VIII</option>
-            <option value="1595738719">KELAS IX</option>
-            <option value="881704821">KELAS X</option>
-            <option value="811189715">KELAS XI</option>
-            <option value="2001221833">KELAS XII</option>
-        </select>
+        <div class="select-group">
+            <label for="pilihKelas" style="display:block; margin-bottom:8px; font-weight:bold;">Pilih Jenjang Kelas:</label>
+            <select id="pilihKelas" onchange="muatData()">
+                <option value="1462101133">KELAS VII</option>
+                <option value="1467004494">KELAS VIII</option>
+                <option value="1595738719">KELAS IX</option>
+                <option value="881704821">KELAS X</option>
+                <option value="811189715">KELAS XI</option>
+                <option value="2001221833">KELAS XII</option>
+            </select>
+        </div>
         
         <a href="https://docs.google.com/spreadsheets/d/1XaVh_Jnbvryl216Mofuecx7DxNBezU3kRg8ZHjwu1qY/" target="_blank" class="btn-database">
-            📂 Buka Database Absensi
+            📂 Data Base Absensi
         </a>
     </div>
 
@@ -89,18 +125,16 @@
             header: false,
             complete: function(results) {
                 const rows = results.data;
-                
                 if (rows.length < 8) {
-                    statusEl.innerHTML = "<div class='error-msg'>Data pada sheet ini tidak ditemukan atau format tidak sesuai.</div>";
+                    statusEl.innerHTML = "<div class='error-msg'>Data pada sheet ini tidak ditemukan.</div>";
                     return;
                 }
-
                 const dataSiswa = rows.slice(7); 
                 tampilkanTabel(dataSiswa);
                 statusEl.innerHTML = "";
             },
             error: function(err) {
-                statusEl.innerHTML = `<div class='error-msg'><strong>Gagal Mengambil Data</strong><br>Pastikan akses Google Sheet: Bagikan > Siapa saja yang memiliki link.</div>`;
+                statusEl.innerHTML = `<div class='error-msg'><strong>Gagal Mengambil Data</strong></div>`;
             }
         });
     }
@@ -109,13 +143,13 @@
         let html = `<table>
             <thead>
                 <tr>
-                    <th width="40">No</th>
-                    <th>Nama Siswa</th>
-                    <th width="40">A</th>
-                    <th width="40">S</th>
-                    <th width="40">I</th>
-                    <th width="70">Hadir</th>
-                    <th width="80">% Hadir</th>
+                    <th width="50">No</th>
+                    <th class="name-col">Nama Siswa</th>
+                    <th width="60">A</th>
+                    <th width="60">S</th>
+                    <th width="60">I</th>
+                    <th width="80">Hadir</th>
+                    <th width="100">% Hadir</th>
                 </tr>
             </thead>
             <tbody>`;
@@ -132,15 +166,12 @@
 
                 for (let j = 3; j <= 33; j++) {
                     let val = (row[j] || "").toString().trim().toUpperCase();
-                    
                     if (val !== "") {
                         hariEfektif++;
                         if (val === 'A') a++;
                         else if (val === 'S') s++;
                         else if (val === 'I') i++;
-                        else {
-                            hadir++;
-                        }
+                        else hadir++;
                     }
                 }
 
@@ -159,12 +190,7 @@
         });
 
         html += '</tbody></table>';
-        
-        if (counter === 0) {
-            document.getElementById('tabelHasil').innerHTML = "<div class='error-msg'>Tidak ada data siswa ditemukan.</div>";
-        } else {
-            document.getElementById('tabelHasil').innerHTML = html;
-        }
+        document.getElementById('tabelHasil').innerHTML = counter === 0 ? "<div class='error-msg'>Tidak ada data.</div>" : html;
     }
 
     window.onload = muatData;
