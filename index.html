@@ -12,7 +12,25 @@
         h2 { text-align: center; color: var(--primary); margin: 0; }
         .subtitle { text-align: center; color: #7f8c8d; margin-bottom: 25px; font-size: 0.9em; }
         .controls { margin-bottom: 20px; }
-        select { width: 100%; padding: 12px; border-radius: 8px; border: 2px solid #ddd; font-size: 16px; cursor: pointer; background: white; }
+        select { width: 100%; padding: 12px; border-radius: 8px; border: 2px solid #ddd; font-size: 16px; cursor: pointer; background: white; margin-bottom: 10px; }
+        
+        /* Gaya untuk tombol link baru */
+        .btn-database {
+            display: block;
+            text-align: center;
+            background-color: var(--success);
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+        .btn-database:hover {
+            background-color: #27ae60;
+        }
+
         table { width: 100%; border-collapse: collapse; margin-top: 10px; border: 1px solid #eee; font-size: 14px; }
         th { background: var(--primary); color: white; padding: 12px; position: sticky; top: 0; }
         td { padding: 10px; border-bottom: 1px solid #eee; text-align: center; }
@@ -43,6 +61,10 @@
             <option value="811189715">KELAS XI</option>
             <option value="2001221833">KELAS XII</option>
         </select>
+        
+        <a href="https://docs.google.com/spreadsheets/d/1XaVh_Jnbvryl216Mofuecx7DxNBezU3kRg8ZHjwu1qY/" target="_blank" class="btn-database">
+            📂 Buka Database Absensi
+        </a>
     </div>
 
     <div id="status"></div>
@@ -73,8 +95,6 @@
                     return;
                 }
 
-                // Ambil baris ke-7 (index 6) untuk mendeteksi hari Minggu (warna merah/teks tertentu)
-                // Di sistem CSV, kita asumsikan hari Minggu adalah kolom yang biasanya kosong atau ditandai khusus
                 const dataSiswa = rows.slice(7); 
                 tampilkanTabel(dataSiswa);
                 statusEl.innerHTML = "";
@@ -110,24 +130,20 @@
                 let a = 0, s = 0, i = 0, hadir = 0;
                 let hariEfektif = 0;
 
-                // Loop Kolom D (index 3) sampai AH (index 33)
                 for (let j = 3; j <= 33; j++) {
                     let val = (row[j] || "").toString().trim().toUpperCase();
                     
-                    // Kita asumsikan kolom yang diisi (baik titik atau huruf) adalah hari sekolah
                     if (val !== "") {
                         hariEfektif++;
                         if (val === 'A') a++;
                         else if (val === 'S') s++;
                         else if (val === 'I') i++;
                         else {
-                            // Jika berisi titik (.) atau tanda lain dianggap hadir
                             hadir++;
                         }
                     }
                 }
 
-                // Hitung persentase
                 let persen = hariEfektif > 0 ? ((hadir / hariEfektif) * 100).toFixed(1) : 0;
 
                 html += `<tr>
