@@ -21,7 +21,7 @@
             padding: 20px;
         }
 
-        /* --- SEMUA KODE TAMPILAN ASLI ANDA DIBAWAH INI TIDAK BERUBAH --- */
+        /* --- KODE DESAIN ASLI ANDA --- */
         .container { 
             width: 1450px; 
             margin: auto; 
@@ -83,32 +83,54 @@
         .footer-table td { text-align: left; padding: 5px; border: none; font-size: 13px; color: #333; }
         .loading { text-align: center; font-style: italic; color: var(--accent); padding: 20px; }
 
-        /* --- NOTIFIKASI PUTAR HP (TETAP ADA) --- */
+        /* --- KODE BARU: NOTIFIKASI PUTAR HP UNIVERSAL --- */
         #rotate-notice {
-            display: none;
+            display: none; /* Sembunyi di desktop */
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: #2c3e50;
-            z-index: 99999;
+            z-index: 10000;
             color: white;
             text-align: center;
             justify-content: center;
             align-items: center;
             flex-direction: column;
+            padding: 20px;
+            box-sizing: border-box;
         }
 
-        @media screen and (max-width: 900px) and (orientation: portrait) {
+        .icon-rotate {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            animation: rotateDevice 2s infinite ease-in-out;
+        }
+
+        @keyframes rotateDevice {
+            0% { transform: rotate(0deg); }
+            50% { transform: rotate(90deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        /* Deteksi otomatis untuk semua jenis HP & Tablet saat posisi Portrait */
+        @media only screen and (max-width: 1024px) and (orientation: portrait) {
             #rotate-notice { display: flex; }
             .container { display: none; }
+            body { overflow: hidden; background: #2c3e50; }
         }
     </style>
 </head>
 <body>
 
 <div id="rotate-notice">
-    <div style="font-size: 50px;">🔄</div>
-    <h2>Gunakan Mode Landscape</h2>
-    <p>Mohon putar HP Anda untuk melihat tabel secara penuh.</p>
+    <div class="icon-rotate">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16 3H8C6.89543 3 6 3.89543 6 5V19C6 20.1046 6.89543 21 8 21H16C17.1046 21 18 20.1046 18 19V5C18 3.89543 17.1046 3 16 3Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M12 18H12.01" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </div>
+    <h2 style="color: white; font-size: 1.5em; margin: 10px 0;">Mode Landscape Diperlukan</h2>
+    <p style="font-size: 1.1em; opacity: 0.9;">Silakan putar perangkat Anda untuk melihat laporan dengan jelas.</p>
 </div>
 
 <div class="container">
@@ -142,7 +164,7 @@
 </div>
 
 <script>
-    /* SELURUH LOGIKA JAVASCRIPT ASLI ANDA TETAP SAMA */
+    // Seluruh logika JavaScript asli Anda tetap sama tanpa ada yang dihapus
     const ssID = '1XaVh_Jnbvryl216Mofuecx7DxNBezU3kRg8ZHjwu1qY'; 
 
     function muatData() {
