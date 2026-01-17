@@ -22,6 +22,40 @@
             min-width: 1450px; 
         }
 
+        /* --- FITUR FULLSCREEN OVERLAY --- */
+        #fullscreen-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(44, 62, 80, 0.98);
+            z-index: 100000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .pulse-icon {
+            width: 80px;
+            height: 80px;
+            border: 3px solid var(--accent);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(52, 152, 219, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 20px rgba(52, 152, 219, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(52, 152, 219, 0); }
+        }
+
         /* --- SIMBOL HP BERPUTAR (CSS ONLY) --- */
         #rotation-warning {
             display: none;
@@ -103,7 +137,6 @@
         .school-name { color: var(--accent); font-weight: bold; margin-top: 5px; font-size: 1.4em; }
         .subtitle { color: #7f8c8d; margin-top: 10px; font-size: 1.2em; font-weight: 500; border-bottom: 2px solid #eee; padding-bottom: 15px; }
         
-        /* MODIFIKASI KONTROL BERJAJAR */
         .controls { 
             margin-bottom: 20px; 
             display: flex; 
@@ -116,7 +149,6 @@
         }
         .control-group { display: flex; flex-direction: row; align-items: center; gap: 15px; }
         
-        /* Gaya Tombol Refresh */
         .btn-refresh {
             background-color: var(--accent);
             color: white;
@@ -174,6 +206,16 @@
 </head>
 <body>
 
+<div id="fullscreen-overlay" onclick="enableFullscreen()">
+    <div class="pulse-icon">
+        <svg width="40" height="40" fill="white" viewBox="0 0 24 24">
+            <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+        </svg>
+    </div>
+    <h2 style="color:white; margin:0 0 10px 0;">MASUK KE MODE APLIKASI</h2>
+    <p style="margin:0; opacity:0.8;">Ketuk layar untuk sinkronisasi data & tampilan penuh</p>
+</div>
+
 <div id="rotation-warning">
     <div class="phone-container"></div>
     <p style="font-family: sans-serif; line-height: 1.6; margin: 0 25px;">
@@ -219,6 +261,21 @@
 
 <script>
     const ssID = '1XaVh_Jnbvryl216Mofuecx7DxNBezU3kRg8ZHjwu1qY'; 
+
+    // FUNGSI UNTUK AKTIFKAN FULLSCREEN
+    function enableFullscreen() {
+        const elem = document.documentElement;
+        if (elem.requestFullscreen) {
+            elem.requestFullscreen();
+        } else if (elem.webkitRequestFullscreen) { /* Safari */
+            elem.webkitRequestFullscreen();
+        } else if (elem.msRequestFullscreen) { /* IE11 */
+            elem.msRequestFullscreen();
+        }
+        
+        document.getElementById('fullscreen-overlay').style.display = 'none';
+        muatData(); // Jalankan muat data setelah fullscreen aktif
+    }
 
     function checkOrientation() {
         const warning = document.getElementById('rotation-warning');
@@ -327,7 +384,8 @@
         document.getElementById('tabelBawah').innerHTML = html;
     }
 
-    window.onload = muatData;
+    // Hanya jalankan checkOrientation di awal, muatData akan dipicu oleh Overlay Fullscreen
+    window.onload = checkOrientation;
 </script>
 
 </body>
