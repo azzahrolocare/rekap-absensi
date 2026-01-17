@@ -19,10 +19,9 @@
             background: #f4f7f6; 
             margin: 0; 
             padding: 20px;
-            /* Kita biarkan fleksibel, tapi container yang menentukan lebar */
         }
 
-        /* Container tetap mempertahankan lebar besar 1450px agar tampilan tidak rusak */
+        /* --- STYLE ASLI ANDA TETAP DIPERTAHANKAN --- */
         .container { 
             width: 1450px; 
             margin: auto; 
@@ -32,13 +31,6 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
         }
 
-        /* Fitur scroll otomatis jika layar lebih kecil dari 1500px */
-        @media screen and (max-width: 1500px) {
-            body { padding: 10px; }
-            .container { margin: 0; }
-        }
-
-        /* HEADER (Tetap sesuai desain asli) */
         .header-wrapper {
             display: flex;
             align-items: center;
@@ -53,7 +45,6 @@
         .school-name { color: var(--accent); font-weight: bold; margin-top: 5px; font-size: 1.4em; }
         .subtitle { color: #7f8c8d; margin-top: 10px; font-size: 1.2em; font-weight: 500; border-bottom: 2px solid #eee; padding-bottom: 15px; }
         
-        /* CONTROLS */
         .controls { 
             margin-bottom: 20px; 
             display: flex; 
@@ -63,11 +54,11 @@
             border-radius: 8px;
             border: 1px solid #eee;
         }
+
         .control-group { display: flex; flex-direction: column; gap: 5px; width: 350px; }
         select { padding: 10px; border-radius: 6px; border: 1px solid #ddd; font-size: 14px; background: white; font-weight: bold; }
         label { font-weight: bold; font-size: 13px; color: var(--primary); text-align: center; }
 
-        /* TABLE (Tetap sesuai desain asli) */
         table { width: 100%; border-collapse: collapse; margin-top: 10px; border: 1px solid #ccc; font-size: 11px; table-layout: fixed; }
         th { background: var(--primary); color: white; padding: 5px 2px; border: 1px solid #34495e; text-transform: uppercase; }
         td { padding: 8px 2px; border: 1px solid #eee; text-align: center; }
@@ -93,31 +84,47 @@
         .footer-table td { text-align: left; padding: 5px; border: none; font-size: 13px; color: #333; }
         .loading { text-align: center; font-style: italic; color: var(--accent); padding: 20px; }
 
-        /* PESAN OTOMATIS LANDSCAPE UNTUK HP */
-        #orientation-msg {
+        /* --- TAMBAHAN NOTIFIKASI PUTAR HP --- */
+        #rotate-notice {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: #2c3e50;
+            background: rgba(44, 62, 80, 0.98);
+            z-index: 99999;
             color: white;
-            z-index: 10000;
             text-align: center;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
+            flex-direction: column;
         }
-
-        @media screen and (max-width: 900px) and (orientation: portrait) {
-            #orientation-msg { display: flex; }
+        .phone-icon {
+            width: 80px; height: 80px; margin-bottom: 20px;
+            animation: rotateAnim 2s infinite ease-in-out;
         }
+        @keyframes rotateAnim {
+            0% { transform: rotate(0deg); }
+            50% { transform: rotate(90deg); }
+            100% { transform: rotate(0deg); }
+        }
+        @media screen and (max-width: 1000px) and (orientation: portrait) {
+            #rotate-notice { display: flex; }
+            body { overflow: hidden; }
+        }
+        /* Memungkinkan scroll horizontal jika layar lebih kecil dari 1450px */
+        .scroll-wrapper { width: 100%; overflow-x: auto; }
     </style>
 </head>
 <body>
 
-<div id="orientation-msg">
-    <div style="font-size: 40px;">🔄</div>
-    <h2>Mode Landscape Diperlukan</h2>
-    <p>Silakan putar perangkat Anda untuk melihat laporan.</p>
+<div id="rotate-notice">
+    <div class="phone-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+            <rect x="5" y="2" width="14" height="20" rx="2"></rect>
+            <path d="M12 18h.01"></path>
+        </svg>
+    </div>
+    <h3>Gunakan Mode Landscape</h3>
+    <p>Mohon putar HP Anda untuk melihat rekap absensi.</p>
 </div>
 
 <div class="container">
@@ -146,9 +153,11 @@
     </div>
 
     <div id="status"></div>
-    <div style="overflow-x: auto;">
+    
+    <div class="scroll-wrapper">
         <div id="tabelHasil"></div>
     </div>
+
     <div id="tabelBawah"></div>
 </div>
 
