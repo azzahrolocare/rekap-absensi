@@ -18,8 +18,8 @@
             font-family: 'Segoe UI', Arial, sans-serif; 
             background: #f4f7f6; 
             margin: 0; 
-            padding: 10px;
-            /* Lebar minimal dihapus agar fleksibel di HP */
+            padding: 20px;
+            /* min-width dihapus agar tidak kaku di HP, digantikan overflow pada container */
         }
 
         /* --- SIMBOL HP BERPUTAR --- */
@@ -40,13 +40,21 @@
         }
 
         .phone-container {
-            width: 40px;
-            height: 70px;
+            width: 50px;
+            height: 90px;
             border: 3px solid white;
             border-radius: 6px;
             position: relative;
-            margin-bottom: 20px;
+            margin-bottom: 40px;
             animation: rotateDevice 2s ease-in-out infinite;
+        }
+
+        .phone-container::after {
+            content: '';
+            position: absolute; bottom: 5px; left: 50%;
+            transform: translateX(-50%);
+            width: 8px; height: 8px;
+            border: 1px solid white; border-radius: 50%;
         }
 
         @keyframes rotateDevice {
@@ -62,13 +70,13 @@
             .container { display: none; }
         }
 
-        /* --- CONTAINER UTAMA --- */
+        /* --- CONTAINER --- */
         .container { 
             width: 100%;
             max-width: 1450px; 
             margin: auto; 
             background: white; 
-            padding: 15px; 
+            padding: 25px; 
             border-radius: 12px; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
             box-sizing: border-box;
@@ -82,80 +90,79 @@
             border-radius: 0;
         }
 
-        .header-wrapper { 
-            display: flex; 
-            align-items: center; 
-            justify-content: space-between; 
-            margin-bottom: 20px; 
-        }
+        .header-wrapper { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding: 0 40px; }
+        .header-logo { width: 85px; height: auto; }
+        .header-text { text-align: center; flex-grow: 1; }
+        h2 { color: var(--primary); margin: 0; text-transform: uppercase; font-size: 1.8em; }
+        .school-name { color: var(--accent); font-weight: bold; margin-top: 5px; font-size: 1.4em; }
+        .subtitle { color: #7f8c8d; margin-top: 10px; font-size: 1.2em; font-weight: 500; border-bottom: 2px solid #eee; padding-bottom: 15px; }
         
-        .header-logo { width: 60px; height: auto; }
-        .header-text { text-align: center; flex-grow: 1; padding: 0 10px; }
-        h2 { color: var(--primary); margin: 0; text-transform: uppercase; font-size: 1.2em; }
-        .school-name { color: var(--accent); font-weight: bold; font-size: 1em; }
-        .subtitle { color: #7f8c8d; margin-top: 10px; font-size: 0.9em; border-bottom: 2px solid #eee; padding-bottom: 10px; }
-        
-        /* --- KONTROL --- */
         .controls { 
             margin-bottom: 20px; 
             display: flex; 
-            flex-wrap: wrap;
             justify-content: space-between; 
             align-items: center; 
             background: #f9f9f9; 
-            padding: 10px; 
+            padding: 15px 25px; 
             border-radius: 8px; 
+            border: 1px solid #eee;
             gap: 10px;
+            flex-wrap: wrap;
         }
-        
-        .control-group { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .control-group { display: flex; flex-direction: row; align-items: center; gap: 15px; }
         
         .btn-refresh {
             background-color: var(--accent);
             color: white;
             border: none;
-            padding: 8px 15px;
+            padding: 10px 20px;
             border-radius: 6px;
             cursor: pointer;
             font-weight: bold;
-            font-size: 12px;
+            font-size: 14px;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
+            transition: all 0.3s ease;
             text-transform: uppercase;
         }
 
         .btn-fullscreen { background-color: var(--success); }
-        
-        /* --- TABEL RESPONSIVE --- */
-        .table-responsive {
-            width: 100%;
-            overflow-x: auto; /* Scroll horizontal untuk tabel */
-            border: 1px solid #ccc;
-            -webkit-overflow-scrolling: touch;
-        }
 
+        /* --- TABEL STYLES (ASLI) --- */
+        .table-wrapper { width: 100%; overflow-x: auto; border: 1px solid #ccc; }
+        
         table { width: 1450px; border-collapse: collapse; font-size: 11px; table-layout: fixed; }
         th { background: var(--primary); color: white; padding: 5px 2px; border: 1px solid #34495e; text-transform: uppercase; }
         td { padding: 8px 2px; border: 1px solid #eee; text-align: center; }
         tr:nth-child(even) { background-color: #f9f9f9; }
         
-        .name-col { text-align: left; font-weight: 500; width: 200px; padding-left: 10px; position: sticky; left: 0; background: white; z-index: 2; border-right: 2px solid #ccc; }
-        th.name-col { background: var(--primary); z-index: 3; }
+        .name-col { text-align: left; font-weight: 500; width: 220px; padding-left: 10px; font-size: 12px; }
+        .tgl-col { width: 30px; font-size: 10px; }
+        .hari-row { background: #ecf0f1 !important; color: var(--primary); font-size: 9px; font-weight: bold; }
         
-        .tgl-col { width: 30px; }
+        /* Warna Sel Absensi */
         .cell-a { background-color: #ffd7d7; color: var(--danger); font-weight: bold; }
         .cell-s { background-color: #fff4cc; color: #d68910; font-weight: bold; }
         .cell-i { background-color: #d5f5e3; color: var(--success); font-weight: bold; }
-        .rekap-col { width: 32px; font-weight: bold; }
-        .label-persen { color: #fff !important; background: #2980b9 !important; width: 45px !important; }
+        
+        /* Warna Rekap Total (Fitur yang Anda minta dikembalikan) */
+        .rekap-col { width: 32px; font-weight: bold; font-size: 12px; border-left: 1px solid #ccc !important; }
+        .label-a { color: var(--danger); background: #fff1f1 !important; }
+        .label-s { color: #d68910; background: #fffdf0 !important; }
+        .label-i { color: var(--success); background: #f0fff4 !important; }
+        .label-h { color: #2980b9; background: #f0f7ff !important; }
+        .label-persen { color: #fff !important; background: #2980b9 !important; width: 45px !important; font-weight: bold; font-size: 11px; }
 
+        #tabelBawah { margin-top: 30px; padding: 15px; border-top: 2px dashed #eee; }
+        .footer-table { width: 100%; border: none; table-layout: auto; }
+        .footer-table td { text-align: left; padding: 5px; border: none; font-size: 13px; color: #333; }
+        
         @media (max-width: 600px) {
-            .header-logo { width: 45px; }
-            h2 { font-size: 1em; }
-            .school-name { font-size: 0.8em; }
-            .control-group { width: 100%; }
-            select { width: 100%; }
+            .header-wrapper { flex-direction: column; padding: 0; }
+            .header-logo { width: 60px; }
+            h2 { font-size: 1.2em; }
+            .controls { flex-direction: column; align-items: stretch; }
         }
     </style>
 </head>
@@ -163,7 +170,10 @@
 
 <div id="rotation-warning">
     <div class="phone-container"></div>
-    <p style="padding: 0 20px;"><b>PUTAR LAYAR HP</b><br>Gunakan posisi Lanskap agar tabel terlihat jelas.</p>
+    <p style="font-family: sans-serif; line-height: 1.6; margin: 0 25px;">
+        <span style="font-size: 1.3em; font-weight: bold; color: var(--warning);">PUTAR LAYAR HP</span><br>
+        Aktifkan rotasi otomatis dan gunakan posisi <b>Lanskap</b> agar tabel terbaca.
+    </p>
 </div>
 
 <div class="container">
@@ -171,7 +181,7 @@
         <img src="https://github.com/masrahmat-id/absensi-barcode-online-smp-smk-azzahro/raw/main/logo-smp-azzahro.png" alt="Logo SMP" class="header-logo">
         <div class="header-text">
             <h2>REKAP ABSENSI SISWA DIGITAL</h2>
-            <div class="school-name">SMP ISLAM & SMK AZ-ZAHRO</div>
+            <div class="school-name">SMP ISLAM AZ-ZAHRO & SMK AZ-ZAHRO</div>
             <p id="judulRekap" class="subtitle">TAHUN PELAJARAN 2026</p>
         </div>
         <img src="https://github.com/masrahmat-id/absensi-barcode-online-smp-smk-azzahro/raw/main/logo-smk-azzahro.png" alt="Logo SMK" class="header-logo">
@@ -179,7 +189,7 @@
     
     <div class="controls">
         <div class="control-group">
-            <label>KELAS:</label>
+            <label>PILIH JENJANG KELAS :</label>
             <select id="pilihKelas" onchange="muatData()">
                 <option value="1462101133">KELAS VII</option>
                 <option value="1467004494">KELAS VIII</option>
@@ -189,14 +199,19 @@
                 <option value="2001221833">KELAS XII</option>
             </select>
         </div>
+
         <div class="control-group">
-            <button class="btn-refresh btn-fullscreen" onclick="toggleFullScreen()">⛶ LAYAR PENUH</button>
-            <button class="btn-refresh" onclick="muatData()">🔄 REFRESH</button>
+            <button class="btn-refresh btn-fullscreen" onclick="toggleFullScreen()">
+                <span id="fs-icon">⛶</span> LAYAR PENUH
+            </button>
+            <button class="btn-refresh" onclick="muatData()">
+                🔄 REFRESH DATA
+            </button>
         </div>
     </div>
 
     <div id="status"></div>
-    <div class="table-responsive">
+    <div class="table-wrapper">
         <div id="tabelHasil"></div>
     </div>
     <div id="tabelBawah"></div>
@@ -207,11 +222,11 @@
 
     function toggleFullScreen() {
         if (!document.fullscreenElement) {
-            document.documentElement.requestFullscreen().catch(e => {
-                alert(`Error: ${e.message}`);
-            });
+            document.documentElement.requestFullscreen();
+            document.getElementById('fs-icon').innerText = "❌";
         } else {
             document.exitFullscreen();
+            document.getElementById('fs-icon').innerText = "⛶";
         }
     }
 
@@ -222,8 +237,10 @@
         const bawahEl = document.getElementById('tabelBawah');
         const judulEl = document.getElementById('judulRekap');
         
-        statusEl.innerHTML = "<div style='text-align:center; padding:20px;'>Memproses data...</div>";
-        
+        statusEl.innerHTML = "<div style='text-align:center;color:var(--accent);padding:20px;'>Sinkronisasi data...</div>";
+        tabelEl.innerHTML = "";
+        bawahEl.innerHTML = "";
+
         const url = `https://docs.google.com/spreadsheets/d/${ssID}/export?format=csv&gid=${gid}&t=${new Date().getTime()}`;
 
         Papa.parse(url, {
@@ -250,51 +267,65 @@
     }
 
     function tampilkanTabel(tanggals, haris, data) {
-        let html = `<table><thead>
-            <tr>
-                <th width="40" rowspan="3">No</th>
-                <th class="name-col" rowspan="3">Nama Siswa</th>
-                <th colspan="31">Kehadiran</th>
-                <th colspan="5">Total</th>
-            </tr>
-            <tr>`;
+        let html = `<table>
+            <thead>
+                <tr>
+                    <th width="35" rowspan="3">No</th>
+                    <th class="name-col" rowspan="3">Nama Siswa</th>
+                    <th colspan="31">Daftar Kehadiran Harian</th>
+                    <th colspan="5">Total</th>
+                </tr>
+                <tr class="hari-row">`;
         
         haris.forEach(hari => { html += `<th class="tgl-col">${hari || ''}</th>`; });
         html += `<th class="rekap-col">A</th><th class="rekap-col">S</th><th class="rekap-col">I</th><th class="rekap-col">H</th><th class="label-persen">%</th></tr><tr>`;
         
-        tanggals.forEach(tgl => { html += `<th class="tgl-col">${tgl || ''}</th>`; });
-        html += `<th colspan="5" style="background:#2c3e50"></th></tr></thead><tbody>`;
+        tanggals.forEach(tgl => { html += `<th class="tgl-col" style="background:#34495e">${tgl || ''}</th>`; });
+        html += `<th colspan="5" style="background:#2c3e50; height:5px"></th></tr></thead><tbody>`;
 
         data.forEach((row) => {
             const no = row[0];   
             const nama = row[1]; 
             if (no && nama && !isNaN(no.trim())) {
-                let a = 0, s = 0, i = 0, h = 0, e = 0, cells = "";
+                let a = 0, s = 0, i = 0, hadir = 0, hariEfektif = 0, tglCells = "";
                 for (let j = 3; j <= 33; j++) {
-                    let v = (row[j] || "").trim().toUpperCase();
-                    let c = (v==='A')?"cell-a":(v==='S')?"cell-s":(v==='I')?"cell-i":"";
-                    if (v==='A') a++; else if (v==='S') s++; else if (v==='I') i++; else if (v!=='') h++;
-                    if (v!=='') e++;
-                    cells += `<td class="${c}">${v}</td>`;
+                    let val = (row[j] || "").toString().trim().toUpperCase();
+                    let cellClass = (val==='A')?"cell-a":(val==='S')?"cell-s":(val==='I')?"cell-i":"";
+                    if (val === 'A') a++; else if (val === 'S') s++; else if (val === 'I') i++; else if (val !== "") hadir++;
+                    if (val !== "") hariEfektif++;
+                    tglCells += `<td class="tgl-col ${cellClass}">${val}</td>`;
                 }
-                let p = e > 0 ? Math.round((h/e)*100) : 0;
-                html += `<tr><td>${no}</td><td class="name-col">${nama}</td>${cells}<td>${a}</td><td>${s}</td><td>${i}</td><td>${h}</td><td class="label-persen">${p}%</td></tr>`;
+                let persen = hariEfektif > 0 ? Math.round((hadir / hariEfektif) * 100) : 0;
+                
+                html += `<tr>
+                    <td>${no}</td>
+                    <td class="name-col">${nama}</td>
+                    ${tglCells}
+                    <td class="rekap-col label-a">${a}</td>
+                    <td class="rekap-col label-s">${s}</td>
+                    <td class="rekap-col label-i">${i}</td>
+                    <td class="rekap-col label-h">${hadir}</td>
+                    <td class="rekap-col label-persen">${persen}%</td>
+                </tr>`;
             }
         });
-        document.getElementById('tabelHasil').innerHTML = html + '</tbody></table>';
+        html += '</tbody></table>';
+        document.getElementById('tabelHasil').innerHTML = html;
     }
 
     function tampilkanDataBawah(data) {
-        let html = `<table style="width:100%; margin-top:20px; table-layout:auto;"><tbody>`;
+        let html = `<table class="footer-table"><tbody>`;
         data.forEach(row => {
             html += `<tr>`;
-            row.forEach(cell => { html += `<td style="text-align:left; border:none; padding:5px;">${cell || ''}</td>`; });
+            row.forEach(cell => { html += `<td>${cell || ''}</td>`; });
             html += `</tr>`;
         });
-        document.getElementById('tabelBawah').innerHTML = html + `</tbody></table>`;
+        html += `</tbody></table>`;
+        document.getElementById('tabelBawah').innerHTML = html;
     }
 
     window.onload = muatData;
 </script>
+
 </body>
 </html>
