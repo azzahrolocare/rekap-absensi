@@ -49,7 +49,6 @@
             animation: rotateDevice 2s ease-in-out infinite;
         }
 
-        /* Tombol Home di simbol HP */
         .phone-container::after {
             content: '';
             position: absolute;
@@ -62,7 +61,6 @@
             border-radius: 50%;
         }
 
-        /* Garis Speaker di simbol HP */
         .phone-container::before {
             content: '';
             position: absolute;
@@ -104,10 +102,14 @@
         h2 { color: var(--primary); margin: 0; text-transform: uppercase; font-size: 1.8em; }
         .school-name { color: var(--accent); font-weight: bold; margin-top: 5px; font-size: 1.4em; }
         .subtitle { color: #7f8c8d; margin-top: 10px; font-size: 1.2em; font-weight: 500; border-bottom: 2px solid #eee; padding-bottom: 15px; }
+        
+        /* MODIFIKASI DISINI: Membuat kontrol berjajar ke samping */
         .controls { margin-bottom: 20px; display: flex; justify-content: center; background: #f9f9f9; padding: 15px; border-radius: 8px; border: 1px solid #eee; }
-        .control-group { display: flex; flex-direction: column; gap: 5px; width: 350px; }
-        select { padding: 10px; border-radius: 6px; border: 1px solid #ddd; font-size: 14px; background: white; font-weight: bold; }
-        label { font-weight: bold; font-size: 13px; color: var(--primary); text-align: center; }
+        .control-group { display: flex; flex-direction: row; align-items: center; gap: 15px; }
+        
+        select { padding: 10px; border-radius: 6px; border: 1px solid #ddd; font-size: 14px; background: white; font-weight: bold; text-transform: uppercase; }
+        label { font-weight: bold; font-size: 14px; color: var(--primary); text-transform: uppercase; }
+        
         table { width: 100%; border-collapse: collapse; margin-top: 10px; border: 1px solid #ccc; font-size: 11px; table-layout: fixed; }
         th { background: var(--primary); color: white; padding: 5px 2px; border: 1px solid #34495e; text-transform: uppercase; }
         td { padding: 8px 2px; border: 1px solid #eee; text-align: center; }
@@ -146,8 +148,14 @@
         <div class="header-text">
             <h2>REKAP ABSENSI SISWA DIGITAL</h2>
             <div class="school-name">SMP ISLAM AZ-ZAHRO & SMK AZ-ZAHRO</div>
-            <p id="judulRekap" class="subtitle">TAHUN PELAJARAN 2026
-             <div class="control-group">
+            <p id="judulRekap" class="subtitle">TAHUN PELAJARAN 2026</p>
+        </div>
+        <img src="https://github.com/masrahmat-id/absensi-barcode-online-smp-smk-azzahro/raw/main/logo-smk-azzahro.png" alt="Logo SMK" class="header-logo">
+    </div>
+    
+    <div class="controls">
+        <div class="control-group">
+            <label>PILIH JENJANG KELAS :</label>
             <select id="pilihKelas" onchange="muatData()">
                 <option value="1462101133">KELAS VII</option>
                 <option value="1467004494">KELAS VIII</option>
@@ -157,12 +165,8 @@
                 <option value="2001221833">KELAS XII</option>
             </select>
         </div>
-            </p>
-           
-        </div>
-        <img src="https://github.com/masrahmat-id/absensi-barcode-online-smp-smk-azzahro/raw/main/logo-smk-azzahro.png" alt="Logo SMK" class="header-logo">
     </div>
-    
+
     <div id="status"></div>
     <div id="tabelHasil"></div>
     <div id="tabelBawah"></div>
