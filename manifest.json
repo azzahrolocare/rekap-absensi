@@ -3,18 +3,7 @@
   "short_name": "Az-Zahro",
   "start_url": "/rekap-absensi/",
   "display": "standalone",
-  "background_color": "#ffffff",
+  "scope": "/rekap-absensi/",
   "theme_color": "#2ecc71",
-  "icons": [
-    {
-      "src": "icon-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "icon-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ]
+  "background_color": "#ffffff"
 }
