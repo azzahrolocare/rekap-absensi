@@ -22,7 +22,7 @@
             min-width: 1450px; 
         }
 
-        /* --- SIMBOL HP BERPUTAR --- */
+        /* --- SIMBOL HP BERPUTAR (CSS ONLY) --- */
         #rotation-warning {
             display: none;
             position: fixed;
@@ -49,16 +49,30 @@
             animation: rotateDevice 2s ease-in-out infinite;
         }
 
+        /* Tombol Home di simbol HP */
         .phone-container::after {
-            content: ''; position: absolute; bottom: 5px; left: 50%;
-            transform: translateX(-50%); width: 8px; height: 8px;
-            border: 1px solid white; border-radius: 50%;
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 8px;
+            border: 1px solid white;
+            border-radius: 50%;
         }
 
+        /* Garis Speaker di simbol HP */
         .phone-container::before {
-            content: ''; position: absolute; top: 8px; left: 50%;
-            transform: translateX(-50%); width: 12px; height: 2px;
-            background: white; border-radius: 2px;
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 12px;
+            height: 2px;
+            background: white;
+            border-radius: 2px;
         }
 
         @keyframes rotateDevice {
@@ -73,8 +87,8 @@
             body { min-width: auto; overflow: hidden; }
             .container { display: none; }
         }
+        /* ----------------------------------------- */
 
-        /* --- LAYOUT UTAMA --- */
         .container { 
             width: 1450px; 
             margin: auto; 
@@ -90,8 +104,10 @@
         h2 { color: var(--primary); margin: 0; text-transform: uppercase; font-size: 1.8em; }
         .school-name { color: var(--accent); font-weight: bold; margin-top: 5px; font-size: 1.4em; }
         .subtitle { color: #7f8c8d; margin-top: 10px; font-size: 1.2em; font-weight: 500; border-bottom: 2px solid #eee; padding-bottom: 15px; }
-        
-        /* --- TABEL --- */
+        .controls { margin-bottom: 20px; display: flex; justify-content: center; background: #f9f9f9; padding: 15px; border-radius: 8px; border: 1px solid #eee; }
+        .control-group { display: flex; flex-direction: column; gap: 5px; width: 350px; }
+        select { padding: 10px; border-radius: 6px; border: 1px solid #ddd; font-size: 14px; background: white; font-weight: bold; }
+        label { font-weight: bold; font-size: 13px; color: var(--primary); text-align: center; }
         table { width: 100%; border-collapse: collapse; margin-top: 10px; border: 1px solid #ccc; font-size: 11px; table-layout: fixed; }
         th { background: var(--primary); color: white; padding: 5px 2px; border: 1px solid #34495e; text-transform: uppercase; }
         td { padding: 8px 2px; border: 1px solid #eee; text-align: center; }
@@ -99,21 +115,18 @@
         .name-col { text-align: left; font-weight: 500; width: 220px; padding-left: 10px; font-size: 12px; }
         .tgl-col { width: 30px; font-size: 10px; }
         .hari-row { background: #ecf0f1 !important; color: var(--primary); font-size: 9px; font-weight: bold; }
-        
-        /* --- DATA TAMBAHAN (BAWAH) --- */
-        #tabelBawah { 
-            margin-top: 30px; 
-            padding: 20px; 
-            border-top: 2px dashed #eee;
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr; /* Membagi jadi 3 kolom rata */
-            gap: 20px;
-        }
-        .footer-section { font-size: 13px; color: #333; line-height: 1.8; }
-        .footer-section.kiri { text-align: left; padding-left: 10px; }
-        .footer-section.tengah { text-align: center; }
-        .footer-section.kanan { text-align: right; padding-right: 10px; }
-
+        .cell-a { background-color: #ffd7d7; color: var(--danger); font-weight: bold; }
+        .cell-s { background-color: #fff4cc; color: #d68910; font-weight: bold; }
+        .cell-i { background-color: #d5f5e3; color: var(--success); font-weight: bold; }
+        .rekap-col { width: 32px; font-weight: bold; font-size: 12px; border-left: 1px solid #ccc !important; }
+        .label-a { color: var(--danger); background: #fff1f1 !important; }
+        .label-s { color: #d68910; background: #fffdf0 !important; }
+        .label-i { color: var(--success); background: #f0fff4 !important; }
+        .label-h { color: #2980b9; background: #f0f7ff !important; }
+        .label-persen { color: #fff !important; background: #2980b9 !important; width: 45px !important; font-weight: bold; font-size: 11px; }
+        #tabelBawah { margin-top: 30px; padding: 15px; border-top: 2px dashed #eee; }
+        .footer-table { width: 100%; border: none; table-layout: auto; }
+        .footer-table td { text-align: left; padding: 5px; border: none; font-size: 13px; color: #333; }
         .loading { text-align: center; font-style: italic; color: var(--accent); padding: 20px; }
     </style>
 </head>
@@ -138,10 +151,10 @@
         <img src="https://github.com/masrahmat-id/absensi-barcode-online-smp-smk-azzahro/raw/main/logo-smk-azzahro.png" alt="Logo SMK" class="header-logo">
     </div>
     
-    <div class="controls" style="margin-bottom: 20px; display: flex; justify-content: center; background: #f9f9f9; padding: 15px; border-radius: 8px; border: 1px solid #eee;">
-        <div style="display: flex; flex-direction: column; gap: 5px; width: 350px;">
-            <label style="font-weight: bold; font-size: 13px; color: var(--primary); text-align: center;">Pilih Jenjang Kelas:</label>
-            <select id="pilihKelas" onchange="muatData()" style="padding: 10px; border-radius: 6px; border: 1px solid #ddd; font-size: 14px; background: white; font-weight: bold;">
+    <div class="controls">
+        <div class="control-group">
+            <label>Pilih Jenjang Kelas:</label>
+            <select id="pilihKelas" onchange="muatData()">
                 <option value="1462101133">KELAS VII</option>
                 <option value="1467004494">KELAS VIII</option>
                 <option value="1595738719">KELAS IX</option>
@@ -200,8 +213,6 @@
                 const tglHeader = rows[6].slice(3, 34);  
                 const hariHeader = rows[5].slice(3, 34); 
                 const dataSiswa = rows.slice(7, 37); 
-                
-                // Ambil seluruh blok data tambahan (Baris 38 sampai 43)
                 const dataTambahan = rows.slice(38, 43);
                 
                 tampilkanTabel(tglHeader, hariHeader, dataSiswa);
@@ -229,19 +240,29 @@
         html += `<th colspan="5" style="background:#2c3e50; height:5px"></th></tr></thead><tbody>`;
 
         data.forEach((row) => {
-            const no = row[0]; const nama = row[1]; 
+            const no = row[0];   
+            const nama = row[1]; 
             if (no && nama && !isNaN(no.trim())) {
                 let a = 0, s = 0, i = 0, hadir = 0, hariEfektif = 0, tglCells = "";
                 for (let j = 3; j <= 33; j++) {
                     let val = (row[j] || "").toString().trim().toUpperCase();
+                    let cellClass = (val==='A')?"cell-a":(val==='S')?"cell-s":(val==='I')?"cell-i":"";
                     if (val === 'A') a++; else if (val === 'S') s++; else if (val === 'I') i++; else if (val !== "") hadir++;
                     if (val !== "") hariEfektif++;
-                    tglCells += `<td class="tgl-col">${val}</td>`;
+                    tglCells += `<td class="tgl-col ${cellClass}">${val}</td>`;
                 }
                 let persen = hariEfektif > 0 ? Math.round((hadir / hariEfektif) * 100) : 0;
-                html += `<tr><td>${no}</td><td class="name-col">${nama}</td>${tglCells}
-                    <td class="rekap-col">${a}</td><td class="rekap-col">${s}</td><td class="rekap-col">${i}</td>
-                    <td class="rekap-col">${hadir}</td><td class="rekap-col label-persen">${persen}%</td></tr>`;
+                
+                html += `<tr>
+                    <td>${no}</td>
+                    <td class="name-col">${nama}</td>
+                    ${tglCells}
+                    <td class="rekap-col label-a">${a}</td>
+                    <td class="rekap-col label-s">${s}</td>
+                    <td class="rekap-col label-i">${i}</td>
+                    <td class="rekap-col label-h">${hadir}</td>
+                    <td class="rekap-col label-persen">${persen}%</td>
+                </tr>`;
             }
         });
         html += '</tbody></table>';
@@ -249,32 +270,14 @@
     }
 
     function tampilkanDataBawah(data) {
-        // Logika pembagian kolom sesuai permintaan:
-        // Kiri: Kolom A-F (indeks 0-5), baris 39-43
-        // Tengah: Kolom Q (indeks 16), baris 40-43
-        // Kanan: Kolom AC (indeks 28), baris 39-43
-
-        let htmlKiri = "", htmlTengah = "", htmlKanan = "";
-
-        data.forEach((row, index) => {
-            // Kolom Kiri (A-F)
-            let kiriRow = row.slice(0, 6).join(" ").trim();
-            if (kiriRow) htmlKiri += `<div>${kiriRow}</div>`;
-
-            // Kolom Tengah (Q - Indeks 16)
-            let tengahRow = row[16] ? row[16].trim() : "";
-            if (tengahRow) htmlTengah += `<div>${tengahRow}</div>`;
-
-            // Kolom Kanan (AC - Indeks 28)
-            let kananRow = row[28] ? row[28].trim() : "";
-            if (kananRow) htmlKanan += `<div>${kananRow}</div>`;
+        let html = `<table class="footer-table"><tbody>`;
+        data.forEach(row => {
+            html += `<tr>`;
+            row.forEach(cell => { html += `<td>${cell || ''}</td>`; });
+            html += `</tr>`;
         });
-
-        document.getElementById('tabelBawah').innerHTML = `
-            <div class="footer-section kiri">${htmlKiri}</div>
-            <div class="footer-section tengah">${htmlTengah}</div>
-            <div class="footer-section kanan">${htmlKanan}</div>
-        `;
+        html += `</tbody></table>`;
+        document.getElementById('tabelBawah').innerHTML = html;
     }
 
     window.onload = muatData;
