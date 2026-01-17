@@ -26,7 +26,8 @@
         }
 
         h2 { text-align: center; color: var(--primary); margin: 0; text-transform: uppercase; }
-        .subtitle { text-align: center; color: #7f8c8d; margin-bottom: 25px; font-size: 1.2em; font-weight: bold; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        .school-name { text-align: center; color: var(--accent); font-weight: bold; margin-top: 5px; font-size: 1.2em; }
+        .subtitle { text-align: center; color: #7f8c8d; margin-bottom: 25px; font-size: 1.1em; font-weight: 500; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-top: 10px; }
         
         .controls { 
             margin-bottom: 20px; 
@@ -93,8 +94,8 @@
 
 <div class="container">
     <h2>REKAP ABSENSI SISWA DIGITAL</h2>
-    <p class="subtitle" style="margin-bottom: 5px; border-bottom: none;">SMP ISLAM AZ-ZAHRO & SMK AZ-ZAHRO</p>
-    <p id="judulRekap" class="subtitle" style="font-size: 1em; color: #34495e;">MENGHUBUNGKAN KE DATABASE...</p>
+    <div class="school-name">SMP ISLAM AZ-ZAHRO & SMK AZ-ZAHRO</div>
+    <p id="judulRekap" class="subtitle">TAHUN PELAJARAN 2026</p>
     
     <div class="controls">
         <div class="control-group flex-grow">
@@ -127,7 +128,7 @@
         const tabelEl = document.getElementById('tabelHasil');
         const judulEl = document.getElementById('judulRekap');
         
-        statusEl.innerHTML = "<div class='loading'>Sinkronisasi data terbaru...</div>";
+        statusEl.innerHTML = "<div class='loading'>Sinkronisasi data...</div>";
         tabelEl.innerHTML = "";
 
         const url = `https://docs.google.com/spreadsheets/d/${ssID}/export?format=csv&gid=${gid}&t=${new Date().getTime()}`;
@@ -138,16 +139,15 @@
             complete: function(results) {
                 const rows = results.data;
                 if (rows.length < 8) {
-                    statusEl.innerHTML = "<div class='error-msg'>Data pada sheet ini tidak ditemukan.</div>";
+                    statusEl.innerHTML = "<div class='error-msg'>Data tidak ditemukan.</div>";
                     return;
                 }
                 
+                // Menampilkan nama kelas, bulan dari sheet, dan tahun tetap 2026
                 const bulanData = rows[1][1] || "---"; 
-                const tahunData = rows[2][1] || "---";
                 const namaKelas = document.getElementById('pilihKelas').options[document.getElementById('pilihKelas').selectedIndex].text;
                 
-                // Menambahkan teks "TAHUN" pada periode
-                judulEl.innerText = `${namaKelas} - PERIODE BULAN ${bulanData.toUpperCase()} TAHUN ${tahunData}`;
+                judulEl.innerText = `${namaKelas} - PERIODE ${bulanData.toUpperCase()} 2026`;
 
                 const tglHeader = rows[4].slice(3, 34);  
                 const hariHeader = rows[5].slice(3, 34); 
@@ -232,7 +232,7 @@
         });
 
         html += '</tbody></table>';
-        document.getElementById('tabelHasil').innerHTML = (counter === 0) ? "<div class='error-msg'>Tidak ada data siswa.</div>" : html;
+        document.getElementById('tabelHasil').innerHTML = (counter === 0) ? "<div class='error-msg'>Tidak ada data ditemukan.</div>" : html;
     }
 
     window.onload = muatData;
