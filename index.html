@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=1450">
     <title>Rekap Absensi Digital - Az-Zahro</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <style>
@@ -19,7 +19,9 @@
             background: #f4f7f6; 
             margin: 0; 
             padding: 20px;
-            /* Perbaikan: min-width dihapus agar tidak memaksa layar lebar */
+            /* Mengunci lebar agar sistem melakukan zoom out */
+            width: 1450px; 
+            min-width: 1450px;
         }
 
         /* --- FITUR FULLSCREEN OVERLAY --- */
@@ -116,31 +118,20 @@
 
         @media only screen and (max-width: 900px) and (orientation: portrait) {
             #rotation-warning { display: flex; }
-            body { overflow: hidden; }
+            body { min-width: auto; overflow: hidden; }
             .container { display: none; }
         }
 
-        /* --- CONTAINER UTAMA (RESPONSIF) --- */
         .container { 
-            width: 98%; 
-            max-width: 1450px; /* Batas lebar maksimal */
+            width: 1450px; 
             margin: auto; 
             background: white; 
             padding: 25px; 
             border-radius: 12px; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
-            box-sizing: border-box;
         }
 
-        /* Bungkus tabel agar bisa di-scroll secara horizontal saja */
-        #tabelHasil {
-            width: 100%;
-            overflow-x: auto;
-            margin-top: 10px;
-            border: 1px solid #ccc;
-        }
-
-        .header-wrapper { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding: 0 10px; }
+        .header-wrapper { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding: 0 40px; }
         .header-logo { width: 85px; height: auto; }
         .header-text { text-align: center; flex-grow: 1; }
         h2 { color: var(--primary); margin: 0; text-transform: uppercase; font-size: 1.8em; }
@@ -156,8 +147,6 @@
             padding: 15px 25px; 
             border-radius: 8px; 
             border: 1px solid #eee; 
-            flex-wrap: wrap;
-            gap: 15px;
         }
         .control-group { display: flex; flex-direction: row; align-items: center; gap: 15px; }
         
@@ -194,12 +183,11 @@
         select { padding: 10px; border-radius: 6px; border: 1px solid #ddd; font-size: 14px; background: white; font-weight: bold; text-transform: uppercase; }
         label { font-weight: bold; font-size: 14px; color: var(--primary); text-transform: uppercase; }
         
-        table { width: 100%; border-collapse: collapse; font-size: 11px; table-layout: fixed; min-width: 1300px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; border: 1px solid #ccc; font-size: 11px; table-layout: fixed; }
         th { background: var(--primary); color: white; padding: 5px 2px; border: 1px solid #34495e; text-transform: uppercase; }
         td { padding: 8px 2px; border: 1px solid #eee; text-align: center; }
         tr:nth-child(even) { background-color: #f9f9f9; }
-        .name-col { text-align: left; font-weight: 500; width: 220px; padding-left: 10px; font-size: 12px; position: sticky; left: 0; background: white; z-index: 2; border-right: 2px solid #ccc; }
-        tr:nth-child(even) .name-col { background-color: #f9f9f9; }
+        .name-col { text-align: left; font-weight: 500; width: 220px; padding-left: 10px; font-size: 12px; }
         .tgl-col { width: 30px; font-size: 10px; }
         .hari-row { background: #ecf0f1 !important; color: var(--primary); font-size: 9px; font-weight: bold; }
         .cell-a { background-color: #ffd7d7; color: var(--danger); font-weight: bold; }
@@ -211,8 +199,8 @@
         .label-i { color: var(--success); background: #f0fff4 !important; }
         .label-h { color: #2980b9; background: #f0f7ff !important; }
         .label-persen { color: #fff !important; background: #2980b9 !important; width: 45px !important; font-weight: bold; font-size: 11px; }
-        #tabelBawah { margin-top: 30px; padding: 15px; border-top: 2px dashed #eee; overflow-x: auto; }
-        .footer-table { width: 100%; border: none; table-layout: auto; min-width: 800px; }
+        #tabelBawah { margin-top: 30px; padding: 15px; border-top: 2px dashed #eee; }
+        .footer-table { width: 100%; border: none; table-layout: auto; }
         .footer-table td { text-align: left; padding: 5px; border: none; font-size: 13px; color: #333; }
         .loading { text-align: center; font-style: italic; color: var(--accent); padding: 20px; }
     </style>
@@ -302,10 +290,6 @@
     window.addEventListener('orientationchange', checkOrientation);
 
     function muatData() {
-        // Cek izin (Internal logic placeholder for "all Screen1.Has Permission")
-        const hasPermission = true; 
-        if(!hasPermission) return;
-
         checkOrientation(); 
         const gid = document.getElementById('pilihKelas').value;
         const statusEl = document.getElementById('status');
