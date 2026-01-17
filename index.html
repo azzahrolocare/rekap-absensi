@@ -80,9 +80,18 @@
         .cell-s { background-color: #fff4cc; color: #d68910; font-weight: bold; }
         .cell-i { background-color: #d5f5e3; color: var(--success); font-weight: bold; }
 
-        /* Style untuk Tabel Bawah (39-43) */
-        .footer-table { margin-top: 30px; border: none; width: auto; min-width: 600px; margin-left: 0; }
-        .footer-table td { text-align: left; padding: 5px 15px; border: none; font-size: 12px; background: transparent !important; }
+        /* Style Khusus Tabel Data Bawah (39-43) */
+        #tabelBawah { margin-top: 30px; padding: 15px; background: #fff; border-top: 2px dashed #eee; }
+        .footer-table { width: 100%; border: none; table-layout: auto; }
+        .footer-table td { 
+            text-align: left; 
+            padding: 8px 5px; 
+            border: none; 
+            font-size: 13px; 
+            color: #2c3e50;
+            background: transparent !important; 
+        }
+        .footer-row-bold { font-weight: bold; color: var(--primary); }
 
         .loading { text-align: center; font-style: italic; color: var(--accent); padding: 20px; }
         .error-msg { text-align: center; color: var(--danger); background: #fdf2f2; padding: 15px; border-radius: 8px; border: 1px solid #f9d7d7; }
@@ -115,6 +124,7 @@
 
     <div id="status"></div>
     <div id="tabelHasil"></div>
+    
     <div id="tabelBawah"></div>
 </div>
 
@@ -151,15 +161,16 @@
                 
                 judulEl.innerText = `${namaKelas} - PERIODE ${bulanData.toUpperCase()} ${tahunData}`;
 
+                // Tabel Utama
                 const tglHeader = rows[4].slice(3, 34);  
                 const hariHeader = rows[5].slice(3, 34); 
-                const dataSiswa = rows.slice(7, 37); // Mengambil data siswa sampai baris 37 (asumsi max 30 siswa)
+                const dataSiswa = rows.slice(7, 37); 
                 
-                // Ambil Data Baris 39-43 (Index 38-42)
+                // Ambil Data Baris 39-43 (Index array 38 sampai 42)
                 const dataTambahan = rows.slice(38, 43);
                 
                 tampilkanTabel(tglHeader, hariHeader, dataSiswa);
-                tampilkanTabelBawah(dataTambahan);
+                tampilkanDataBawah(dataTambahan);
                 
                 statusEl.innerHTML = "";
             },
@@ -208,14 +219,18 @@
         document.getElementById('tabelHasil').innerHTML = html;
     }
 
-    function tampilkanTabelBawah(data) {
+    function tampilkanDataBawah(data) {
+        if (!data || data.length === 0) return;
+
         let html = `<table class="footer-table"><tbody>`;
-        data.forEach(row => {
+        data.forEach((row, index) => {
             html += `<tr>`;
-            // Hanya ambil kolom yang ada isinya (misal kolom A sampai H)
-            for(let i=0; i<10; i++) {
-                html += `<td>${row[i] || ''}</td>`;
-            }
+            // Menampilkan semua kolom yang berisi data pada baris tersebut
+            row.forEach((cell, cellIndex) => {
+                // Memberikan penebalan jika sel mengandung teks tertentu (opsional)
+                let cellClass = (cell && cell.length > 15) ? "" : ""; 
+                html += `<td class="${cellClass}">${cell || ''}</td>`;
+            });
             html += `</tr>`;
         });
         html += `</tbody></table>`;
