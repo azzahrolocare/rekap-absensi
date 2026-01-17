@@ -18,8 +18,7 @@
             font-family: 'Segoe UI', Arial, sans-serif; 
             background: #f4f7f6; 
             margin: 0; 
-            padding: 20px;
-            /* min-width dihapus agar tidak kaku di HP, digantikan overflow pada container */
+            padding: 10px;
         }
 
         /* --- SIMBOL HP BERPUTAR --- */
@@ -40,21 +39,13 @@
         }
 
         .phone-container {
-            width: 50px;
-            height: 90px;
+            width: 40px;
+            height: 70px;
             border: 3px solid white;
             border-radius: 6px;
             position: relative;
-            margin-bottom: 40px;
+            margin-bottom: 20px;
             animation: rotateDevice 2s ease-in-out infinite;
-        }
-
-        .phone-container::after {
-            content: '';
-            position: absolute; bottom: 5px; left: 50%;
-            transform: translateX(-50%);
-            width: 8px; height: 8px;
-            border: 1px solid white; border-radius: 50%;
         }
 
         @keyframes rotateDevice {
@@ -70,19 +61,18 @@
             .container { display: none; }
         }
 
-        /* --- CONTAINER --- */
+        /* --- CONTAINER UTAMA --- */
         .container { 
             width: 100%;
             max-width: 1450px; 
             margin: auto; 
             background: white; 
-            padding: 25px; 
+            padding: 20px; 
             border-radius: 12px; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
             box-sizing: border-box;
         }
 
-        /* Fullscreen adjustment */
         :fullscreen .container {
             width: 100%;
             height: 100vh;
@@ -90,106 +80,97 @@
             border-radius: 0;
         }
 
-        .header-wrapper { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding: 0 40px; }
-        .header-logo { width: 85px; height: auto; }
+        .header-wrapper { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+        .header-logo { width: 70px; height: auto; }
         .header-text { text-align: center; flex-grow: 1; }
-        h2 { color: var(--primary); margin: 0; text-transform: uppercase; font-size: 1.8em; }
-        .school-name { color: var(--accent); font-weight: bold; margin-top: 5px; font-size: 1.4em; }
-        .subtitle { color: #7f8c8d; margin-top: 10px; font-size: 1.2em; font-weight: 500; border-bottom: 2px solid #eee; padding-bottom: 15px; }
+        h2 { color: var(--primary); margin: 0; text-transform: uppercase; font-size: 1.5em; }
+        .school-name { color: var(--accent); font-weight: bold; font-size: 1.2em; }
+        .subtitle { color: #7f8c8d; margin-top: 10px; font-size: 1em; border-bottom: 2px solid #eee; padding-bottom: 15px; }
         
         .controls { 
             margin-bottom: 20px; 
             display: flex; 
+            flex-wrap: wrap;
             justify-content: space-between; 
             align-items: center; 
             background: #f9f9f9; 
-            padding: 15px 25px; 
+            padding: 15px; 
             border-radius: 8px; 
-            border: 1px solid #eee;
             gap: 10px;
-            flex-wrap: wrap;
         }
-        .control-group { display: flex; flex-direction: row; align-items: center; gap: 15px; }
+        
+        .control-group { display: flex; align-items: center; gap: 10px; }
         
         .btn-refresh {
             background-color: var(--accent);
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 10px 18px;
             border-radius: 6px;
             cursor: pointer;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 13px;
             display: flex;
             align-items: center;
             gap: 8px;
-            transition: all 0.3s ease;
             text-transform: uppercase;
         }
-
         .btn-fullscreen { background-color: var(--success); }
 
-        /* --- TABEL STYLES (ASLI) --- */
-        .table-wrapper { width: 100%; overflow-x: auto; border: 1px solid #ccc; }
-        
+        /* --- TABEL --- */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            border: 1px solid #ccc;
+        }
+
         table { width: 1450px; border-collapse: collapse; font-size: 11px; table-layout: fixed; }
         th { background: var(--primary); color: white; padding: 5px 2px; border: 1px solid #34495e; text-transform: uppercase; }
         td { padding: 8px 2px; border: 1px solid #eee; text-align: center; }
-        tr:nth-child(even) { background-color: #f9f9f9; }
         
-        .name-col { text-align: left; font-weight: 500; width: 220px; padding-left: 10px; font-size: 12px; }
-        .tgl-col { width: 30px; font-size: 10px; }
-        .hari-row { background: #ecf0f1 !important; color: var(--primary); font-size: 9px; font-weight: bold; }
+        /* Kolom Nama Sticky */
+        .name-col { text-align: left; font-weight: 500; width: 200px; padding-left: 10px; position: sticky; left: 0; background: white; z-index: 2; border-right: 2px solid #ccc; }
+        th.name-col { background: var(--primary); z-index: 3; }
+
+        /* Warna Sel Kehadiran */
+        .cell-a { background-color: #ffd7d7 !important; color: var(--danger); font-weight: bold; }
+        .cell-s { background-color: #fff4cc !important; color: #d68910; font-weight: bold; }
+        .cell-i { background-color: #d5f5e3 !important; color: var(--success); font-weight: bold; }
         
-        /* Warna Sel Absensi */
-        .cell-a { background-color: #ffd7d7; color: var(--danger); font-weight: bold; }
-        .cell-s { background-color: #fff4cc; color: #d68910; font-weight: bold; }
-        .cell-i { background-color: #d5f5e3; color: var(--success); font-weight: bold; }
-        
-        /* Warna Rekap Total (Fitur yang Anda minta dikembalikan) */
+        /* WARNA KOLOM TOTAL (REKAP) */
         .rekap-col { width: 32px; font-weight: bold; font-size: 12px; border-left: 1px solid #ccc !important; }
         .label-a { color: var(--danger); background: #fff1f1 !important; }
         .label-s { color: #d68910; background: #fffdf0 !important; }
         .label-i { color: var(--success); background: #f0fff4 !important; }
         .label-h { color: #2980b9; background: #f0f7ff !important; }
-        .label-persen { color: #fff !important; background: #2980b9 !important; width: 45px !important; font-weight: bold; font-size: 11px; }
+        .label-persen { color: #fff !important; background: #2980b9 !important; width: 45px !important; font-weight: bold; }
 
         #tabelBawah { margin-top: 30px; padding: 15px; border-top: 2px dashed #eee; }
-        .footer-table { width: 100%; border: none; table-layout: auto; }
+        .footer-table { width: 100%; border: none; }
         .footer-table td { text-align: left; padding: 5px; border: none; font-size: 13px; color: #333; }
-        
-        @media (max-width: 600px) {
-            .header-wrapper { flex-direction: column; padding: 0; }
-            .header-logo { width: 60px; }
-            h2 { font-size: 1.2em; }
-            .controls { flex-direction: column; align-items: stretch; }
-        }
     </style>
 </head>
 <body>
 
 <div id="rotation-warning">
     <div class="phone-container"></div>
-    <p style="font-family: sans-serif; line-height: 1.6; margin: 0 25px;">
-        <span style="font-size: 1.3em; font-weight: bold; color: var(--warning);">PUTAR LAYAR HP</span><br>
-        Aktifkan rotasi otomatis dan gunakan posisi <b>Lanskap</b> agar tabel terbaca.
-    </p>
+    <p><b>PUTAR LAYAR HP</b><br>Gunakan posisi Lanskap agar tabel terbaca.</p>
 </div>
 
 <div class="container">
     <div class="header-wrapper">
-        <img src="https://github.com/masrahmat-id/absensi-barcode-online-smp-smk-azzahro/raw/main/logo-smp-azzahro.png" alt="Logo SMP" class="header-logo">
+        <img src="https://github.com/masrahmat-id/absensi-barcode-online-smp-smk-azzahro/raw/main/logo-smp-azzahro.png" class="header-logo">
         <div class="header-text">
             <h2>REKAP ABSENSI SISWA DIGITAL</h2>
-            <div class="school-name">SMP ISLAM AZ-ZAHRO & SMK AZ-ZAHRO</div>
+            <div class="school-name">SMP ISLAM & SMK AZ-ZAHRO</div>
             <p id="judulRekap" class="subtitle">TAHUN PELAJARAN 2026</p>
         </div>
-        <img src="https://github.com/masrahmat-id/absensi-barcode-online-smp-smk-azzahro/raw/main/logo-smk-azzahro.png" alt="Logo SMK" class="header-logo">
+        <img src="https://github.com/masrahmat-id/absensi-barcode-online-smp-smk-azzahro/raw/main/logo-smk-azzahro.png" class="header-logo">
     </div>
     
     <div class="controls">
         <div class="control-group">
-            <label>PILIH JENJANG KELAS :</label>
+            <label>KELAS:</label>
             <select id="pilihKelas" onchange="muatData()">
                 <option value="1462101133">KELAS VII</option>
                 <option value="1467004494">KELAS VIII</option>
@@ -199,19 +180,14 @@
                 <option value="2001221833">KELAS XII</option>
             </select>
         </div>
-
         <div class="control-group">
-            <button class="btn-refresh btn-fullscreen" onclick="toggleFullScreen()">
-                <span id="fs-icon">⛶</span> LAYAR PENUH
-            </button>
-            <button class="btn-refresh" onclick="muatData()">
-                🔄 REFRESH DATA
-            </button>
+            <button class="btn-refresh btn-fullscreen" onclick="toggleFullScreen()">⛶ LAYAR PENUH</button>
+            <button class="btn-refresh" onclick="muatData()">🔄 REFRESH</button>
         </div>
     </div>
 
     <div id="status"></div>
-    <div class="table-wrapper">
+    <div class="table-responsive">
         <div id="tabelHasil"></div>
     </div>
     <div id="tabelBawah"></div>
@@ -223,24 +199,13 @@
     function toggleFullScreen() {
         if (!document.fullscreenElement) {
             document.documentElement.requestFullscreen();
-            document.getElementById('fs-icon').innerText = "❌";
         } else {
             document.exitFullscreen();
-            document.getElementById('fs-icon').innerText = "⛶";
         }
     }
 
     function muatData() {
         const gid = document.getElementById('pilihKelas').value;
-        const statusEl = document.getElementById('status');
-        const tabelEl = document.getElementById('tabelHasil');
-        const bawahEl = document.getElementById('tabelBawah');
-        const judulEl = document.getElementById('judulRekap');
-        
-        statusEl.innerHTML = "<div style='text-align:center;color:var(--accent);padding:20px;'>Sinkronisasi data...</div>";
-        tabelEl.innerHTML = "";
-        bawahEl.innerHTML = "";
-
         const url = `https://docs.google.com/spreadsheets/d/${ssID}/export?format=csv&gid=${gid}&t=${new Date().getTime()}`;
 
         Papa.parse(url, {
@@ -248,69 +213,59 @@
             header: false,
             complete: function(results) {
                 const rows = results.data;
-                const bulanData = rows[2][1] || "---"; 
-                const tahunData = rows[3][1] || "2026";
+                const bulan = rows[2][1] || "---"; 
+                const tahun = rows[3][1] || "2026";
                 const namaKelas = document.getElementById('pilihKelas').options[document.getElementById('pilihKelas').selectedIndex].text;
                 
-                judulEl.innerText = `${namaKelas} - PERIODE ${bulanData.toUpperCase()} ${tahunData}`;
-
-                const tglHeader = rows[6].slice(3, 34);  
-                const hariHeader = rows[5].slice(3, 34); 
-                const dataSiswa = rows.slice(7, 37); 
-                const dataTambahan = rows.slice(38, 43);
+                document.getElementById('judulRekap').innerText = `${namaKelas} - PERIODE ${bulan.toUpperCase()} ${tahun}`;
                 
-                tampilkanTabel(tglHeader, hariHeader, dataSiswa);
-                tampilkanDataBawah(dataTambahan);
-                statusEl.innerHTML = "";
+                tampilkanTabel(rows[6].slice(3, 34), rows[5].slice(3, 34), rows.slice(7, 37));
+                tampilkanDataBawah(rows.slice(38, 43));
             }
         });
     }
 
     function tampilkanTabel(tanggals, haris, data) {
-        let html = `<table>
-            <thead>
-                <tr>
-                    <th width="35" rowspan="3">No</th>
-                    <th class="name-col" rowspan="3">Nama Siswa</th>
-                    <th colspan="31">Daftar Kehadiran Harian</th>
-                    <th colspan="5">Total</th>
-                </tr>
-                <tr class="hari-row">`;
+        let html = `<table><thead>
+            <tr>
+                <th width="35" rowspan="3">No</th>
+                <th class="name-col" rowspan="3">Nama Siswa</th>
+                <th colspan="31">Daftar Kehadiran Harian</th>
+                <th colspan="5">Total</th>
+            </tr>
+            <tr style="background:#ecf0f1; color:#2c3e50;">`;
         
-        haris.forEach(hari => { html += `<th class="tgl-col">${hari || ''}</th>`; });
+        haris.forEach(hari => { html += `<th style="width:30px;">${hari || ''}</th>`; });
         html += `<th class="rekap-col">A</th><th class="rekap-col">S</th><th class="rekap-col">I</th><th class="rekap-col">H</th><th class="label-persen">%</th></tr><tr>`;
         
-        tanggals.forEach(tgl => { html += `<th class="tgl-col" style="background:#34495e">${tgl || ''}</th>`; });
-        html += `<th colspan="5" style="background:#2c3e50; height:5px"></th></tr></thead><tbody>`;
+        tanggals.forEach(tgl => { html += `<th style="background:#34495e; width:30px;">${tgl || ''}</th>`; });
+        html += `<th colspan="5" style="background:#2c3e50;"></th></tr></thead><tbody>`;
 
         data.forEach((row) => {
-            const no = row[0];   
-            const nama = row[1]; 
+            const no = row[0], nama = row[1];
             if (no && nama && !isNaN(no.trim())) {
-                let a = 0, s = 0, i = 0, hadir = 0, hariEfektif = 0, tglCells = "";
-                for (let j = 3; j <= 33; j++) {
-                    let val = (row[j] || "").toString().trim().toUpperCase();
-                    let cellClass = (val==='A')?"cell-a":(val==='S')?"cell-s":(val==='I')?"cell-i":"";
-                    if (val === 'A') a++; else if (val === 'S') s++; else if (val === 'I') i++; else if (val !== "") hadir++;
-                    if (val !== "") hariEfektif++;
-                    tglCells += `<td class="tgl-col ${cellClass}">${val}</td>`;
+                let a=0, s=0, i=0, h=0, e=0, cells="";
+                for (let j=3; j<=33; j++) {
+                    let v = (row[j] || "").trim().toUpperCase();
+                    let c = (v==='A')?"cell-a":(v==='S')?"cell-s":(v==='I')?"cell-i":"";
+                    if(v==='A') a++; else if(v==='S') s++; else if(v==='I') i++; else if(v!=='') h++;
+                    if(v!=='') e++;
+                    cells += `<td class="${c}">${v}</td>`;
                 }
-                let persen = hariEfektif > 0 ? Math.round((hadir / hariEfektif) * 100) : 0;
-                
+                let p = e > 0 ? Math.round((h/e)*100) : 0;
                 html += `<tr>
                     <td>${no}</td>
                     <td class="name-col">${nama}</td>
-                    ${tglCells}
+                    ${cells}
                     <td class="rekap-col label-a">${a}</td>
                     <td class="rekap-col label-s">${s}</td>
                     <td class="rekap-col label-i">${i}</td>
-                    <td class="rekap-col label-h">${hadir}</td>
-                    <td class="rekap-col label-persen">${persen}%</td>
+                    <td class="rekap-col label-h">${h}</td>
+                    <td class="rekap-col label-persen">${p}%</td>
                 </tr>`;
             }
         });
-        html += '</tbody></table>';
-        document.getElementById('tabelHasil').innerHTML = html;
+        document.getElementById('tabelHasil').innerHTML = html + '</tbody></table>';
     }
 
     function tampilkanDataBawah(data) {
@@ -320,12 +275,10 @@
             row.forEach(cell => { html += `<td>${cell || ''}</td>`; });
             html += `</tr>`;
         });
-        html += `</tbody></table>`;
-        document.getElementById('tabelBawah').innerHTML = html;
+        document.getElementById('tabelBawah').innerHTML = html + `</tbody></table>`;
     }
 
     window.onload = muatData;
 </script>
-
 </body>
 </html>
