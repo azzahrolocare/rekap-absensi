@@ -22,7 +22,7 @@
             min-width: 1450px; 
         }
 
-        /* --- SIMBOL HP BERPUTAR (CSS ONLY) --- */
+        /* --- SIMBOL HP BERPUTAR --- */
         #rotation-warning {
             display: none;
             position: fixed;
@@ -85,8 +85,8 @@
             body { min-width: auto; overflow: hidden; }
             .container { display: none; }
         }
-        /* ----------------------------------------- */
 
+        /* --- LAYOUT UTAMA --- */
         .container { 
             width: 1450px; 
             margin: auto; 
@@ -107,6 +107,7 @@
         select { padding: 10px; border-radius: 6px; border: 1px solid #ddd; font-size: 14px; background: white; font-weight: bold; }
         label { font-weight: bold; font-size: 13px; color: var(--primary); text-align: center; }
 
+        /* --- TABEL --- */
         table { width: 100%; border-collapse: collapse; margin-top: 10px; border: 1px solid #ccc; font-size: 11px; table-layout: fixed; }
         th { background: var(--primary); color: white; padding: 5px 2px; border: 1px solid #34495e; text-transform: uppercase; }
         td { padding: 8px 2px; border: 1px solid #eee; text-align: center; }
@@ -124,26 +125,21 @@
         .label-h { color: #2980b9; background: #f0f7ff !important; }
         .label-persen { color: #fff !important; background: #2980b9 !important; width: 45px !important; font-weight: bold; font-size: 11px; }
 
-        /* PERBAIKAN POSISI DATA TAMBAHAN (DIBAWAH) */
+        /* --- PERUBAHAN DISINI: TABEL BAWAH GESER KE KANAN --- */
         #tabelBawah { 
-            margin-top: 20px; 
-            padding: 10px 0; /* Menghilangkan padding kiri agar sejajar dengan tabel atas */
+            margin-top: 30px; 
+            padding: 15px; 
             border-top: 2px dashed #eee; 
+            display: flex;
+            justify-content: flex-end; /* Menggeser tabel ke arah kanan */
         }
         .footer-table { 
-            width: auto; /* Lebar otomatis mengikuti isi, tidak dipaksa 100% */
-            min-width: 400px;
+            width: auto; /* Lebar otomatis sesuai isi agar bisa digeser */
             border: none; 
             table-layout: auto; 
-            margin-left: 0; /* Paksa nempel ke kiri */
         }
-        .footer-table td { 
-            text-align: left; 
-            padding: 5px 15px 5px 0; /* Padding kanan untuk jarak antar sel, kiri nol */
-            border: none; 
-            font-size: 13px; 
-            color: #333; 
-        }
+        .footer-table td { text-align: left; padding: 5px 15px; border: none; font-size: 13px; color: #333; }
+        
         .loading { text-align: center; font-style: italic; color: var(--accent); padding: 20px; }
     </style>
 </head>
@@ -290,7 +286,12 @@
         let html = `<table class="footer-table"><tbody>`;
         data.forEach(row => {
             html += `<tr>`;
-            row.forEach(cell => { html += `<td>${cell || ''}</td>`; });
+            // Hanya tampilkan jika cell tidak kosong untuk menjaga kerapihan
+            row.forEach(cell => { 
+                if(cell && cell.trim() !== "") {
+                    html += `<td>${cell}</td>`; 
+                }
+            });
             html += `</tr>`;
         });
         html += `</tbody></table>`;
