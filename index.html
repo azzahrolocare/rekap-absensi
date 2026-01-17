@@ -18,22 +18,22 @@
             font-family: 'Segoe UI', Arial, sans-serif; 
             background: #f4f7f6; 
             margin: 0; 
-            padding: 10px; /* Padding lebih kecil agar pas di HP */
+            padding: 10px;
         }
 
-        /* CONTAINER OTOMATIS: Maksimal 1450px di Desktop, tapi 100% di device kecil */
+        /* CONTAINER RESPONSIVE: Mengikuti lebar layar device */
         .container { 
             width: 100%; 
-            max-width: 1450px; 
+            max-width: 1450px; /* Batas maksimal di layar besar */
             margin: auto; 
             background: white; 
             padding: 15px; 
             border-radius: 12px; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
-            box-sizing: border-box; /* Sangat penting agar padding tidak merusak lebar */
+            box-sizing: border-box;
         }
 
-        /* Penyesuaian Header agar tidak meluber di layar kecil */
+        /* Header Responsif */
         .header-wrapper {
             display: flex;
             align-items: center;
@@ -42,23 +42,22 @@
             gap: 10px;
         }
 
-        .header-logo { width: 60px; height: auto; }
-        @media screen and (min-width: 768px) {
-            .header-logo { width: 85px; }
-            .container { padding: 25px; }
-            body { padding: 20px; }
-        }
-
+        .header-logo { width: 50px; height: auto; }
         .header-text { text-align: center; flex-grow: 1; }
-        h2 { color: var(--primary); margin: 0; text-transform: uppercase; font-size: 1.2em; }
-        .school-name { color: var(--accent); font-weight: bold; margin-top: 5px; font-size: 1em; }
         
+        h2 { color: var(--primary); margin: 0; text-transform: uppercase; font-size: 1.1em; }
+        .school-name { color: var(--accent); font-weight: bold; margin-top: 5px; font-size: 0.9em; }
+        .subtitle { color: #7f8c8d; margin-top: 10px; font-size: 0.9em; font-weight: 500; border-bottom: 2px solid #eee; padding-bottom: 15px; }
+
+        /* Pengaturan untuk Layar Tablet/Laptop (Lebih besar) */
         @media screen and (min-width: 768px) {
+            body { padding: 20px; }
+            .container { padding: 25px; }
+            .header-logo { width: 85px; }
             h2 { font-size: 1.8em; }
             .school-name { font-size: 1.4em; }
+            .subtitle { font-size: 1.2em; }
         }
-
-        .subtitle { color: #7f8c8d; margin-top: 10px; font-size: 1em; font-weight: 500; border-bottom: 2px solid #eee; padding-bottom: 15px; }
         
         .controls { 
             margin-bottom: 20px; 
@@ -74,8 +73,9 @@
         select { padding: 10px; border-radius: 6px; border: 1px solid #ddd; font-size: 14px; background: white; font-weight: bold; }
         label { font-weight: bold; font-size: 13px; color: var(--primary); text-align: center; }
 
-        /* TABEL TETAP MEMPERTAHANKAN UKURAN ASLI AGAR TIDAK HANCUR */
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; border: 1px solid #ccc; font-size: 11px; table-layout: fixed; min-width: 1200px; }
+        /* TABEL: Tetap lebar agar data tidak berantakan, dibungkus scroll */
+        .table-scroll { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border: 1px solid #ccc; border-radius: 4px; }
+        table { width: 100%; border-collapse: collapse; font-size: 11px; table-layout: fixed; min-width: 1300px; }
         th { background: var(--primary); color: white; padding: 5px 2px; border: 1px solid #34495e; text-transform: uppercase; }
         td { padding: 8px 2px; border: 1px solid #eee; text-align: center; }
         tr:nth-child(even) { background-color: #f9f9f9; }
@@ -95,9 +95,6 @@
         .label-h { color: #2980b9; background: #f0f7ff !important; }
         .label-persen { color: #fff !important; background: #2980b9 !important; width: 45px !important; font-weight: bold; font-size: 11px; }
         
-        /* Wrapper untuk Scroll Tabel */
-        .table-scroll { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-
         #tabelBawah { margin-top: 30px; padding: 15px; border-top: 2px dashed #eee; }
         .footer-table { width: 100%; border: none; table-layout: auto; }
         .footer-table td { text-align: left; padding: 5px; border: none; font-size: 13px; color: #333; }
@@ -107,7 +104,7 @@
         #rotate-notice {
             display: none;
             position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
+            top: 0; left: 0; width: 100%; height: 100%;
             background: #2c3e50;
             z-index: 999999;
             color: white;
@@ -119,18 +116,10 @@
             box-sizing: border-box;
         }
 
-        .phone-icon {
-            width: 60px; height: 60px; margin-bottom: 20px;
-            animation: rotateAnim 2s infinite ease-in-out;
-        }
+        .phone-icon { width: 50px; height: 50px; margin-bottom: 15px; animation: rotateAnim 2s infinite ease-in-out; }
+        @keyframes rotateAnim { 0% { transform: rotate(0deg); } 50% { transform: rotate(90deg); } 100% { transform: rotate(0deg); } }
 
-        @keyframes rotateAnim {
-            0% { transform: rotate(0deg); }
-            50% { transform: rotate(90deg); }
-            100% { transform: rotate(0deg); }
-        }
-
-        /* Pemicu Notif di Mode Potret HP */
+        /* Muncul hanya di Mode Potret HP */
         @media screen and (max-width: 900px) and (orientation: portrait) {
             #rotate-notice { display: flex; }
             .container { display: none; }
@@ -146,8 +135,8 @@
             <path d="M12 18h.01"></path>
         </svg>
     </div>
-    <h3>Gunakan Mode Landscape</h3>
-    <p>Mohon putar HP Anda untuk melihat rekap absensi.</p>
+    <h3 style="font-size: 1.2em;">Gunakan Mode Landscape</h3>
+    <p style="font-size: 0.9em; opacity: 0.8;">Putar HP Anda untuk melihat rekap absensi.</p>
 </div>
 
 <div class="container">
