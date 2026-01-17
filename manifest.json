@@ -1,7 +1,20 @@
 {
-  "short_name": "Az-Zahro",
   "name": "Rekap Absensi Digital - Az-Zahro",
+  "short_name": "Az-Zahro",
+  "start_url": "/rekap-absensi/",
   "display": "standalone",
-  "start_url": "/",
-  "theme_color": "#2ecc71"
+  "background_color": "#ffffff",
+  "theme_color": "#2ecc71",
+  "icons": [
+    {
+      "src": "icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }
