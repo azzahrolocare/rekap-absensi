@@ -19,13 +19,12 @@
             background: #f4f7f6; 
             margin: 0; 
             padding: 20px;
-            /* Kita gunakan min-width agar tabel tidak hancur saat landscape */
             min-width: 1450px; 
         }
 
-        /* Tampilan Peringatan Rotasi */
+        /* --- ANIMASI & STYLE PERINGATAN ROTASI --- */
         #rotation-warning {
-            display: none; /* Default sembunyi */
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
@@ -39,27 +38,31 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
+            box-sizing: border-box;
         }
 
-        #rotation-warning img {
+        .phone-icon {
             width: 80px;
-            margin-bottom: 20px;
+            height: 80px;
+            margin-bottom: 30px;
             filter: invert(1);
+            animation: rotatePhone 2s ease-in-out infinite;
         }
 
-        /* Deteksi via Media Query untuk layar HP */
-        @media only screen and (max-width: 900px) and (orientation: portrait) {
-            #rotation-warning {
-                display: flex;
-            }
-            body {
-                min-width: auto; /* Matikan lebar paksa saat mode potret agar text warning tidak terpotong */
-                overflow: hidden;
-            }
-            .container {
-                display: none;
-            }
+        /* Animasi memutar HP */
+        @keyframes rotatePhone {
+            0% { transform: rotate(0deg); }
+            40% { transform: rotate(-90deg); }
+            60% { transform: rotate(-90deg); }
+            100% { transform: rotate(0deg); }
         }
+
+        @media only screen and (max-width: 900px) and (orientation: portrait) {
+            #rotation-warning { display: flex; }
+            body { min-width: auto; overflow: hidden; }
+            .container { display: none; }
+        }
+        /* ----------------------------------------- */
 
         .container { 
             width: 1450px; 
@@ -70,7 +73,6 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
         }
 
-        /* Gaya yang lain tetap sama sesuai kode asli Anda */
         .header-wrapper { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding: 0 40px; }
         .header-logo { width: 85px; height: auto; }
         .header-text { text-align: center; flex-grow: 1; }
@@ -106,10 +108,10 @@
 <body>
 
 <div id="rotation-warning">
-    <img src="https://cdn-icons-png.flaticon.com/512/575/575454.png" alt="Rotate">
-    <p style="font-family: sans-serif; margin: 0 20px;">
-        <b>TAMPILAN TERLALU KECIL</b><br><br>
-        Mohon aktifkan <b>Rotasi Otomatis</b> dan putar HP ke posisi <b>Mendatar (Landscape)</b> untuk melihat data dengan jelas.
+    <img src="https://cdn-icons-png.flaticon.com/512/575/575454.png" class="phone-icon" alt="Rotate Icon">
+    <p style="font-family: sans-serif; line-height: 1.6; margin: 0 20px;">
+        <span style="font-size: 1.4em; font-weight: bold; color: var(--warning);">POSISI LAYAR KURANG TEPAT</span><br>
+        Silakan aktifkan <b>Rotasi Otomatis</b> dan putar HP menjadi <b>Lanskap / Mendatar</b> agar tabel absensi dapat terlihat sepenuhnya.
     </p>
 </div>
 
@@ -146,9 +148,9 @@
 <script>
     const ssID = '1XaVh_Jnbvryl216Mofuecx7DxNBezU3kRg8ZHjwu1qY'; 
 
-    // Fungsi deteksi orientasi manual untuk memastikan di Chrome Android berjalan lancar
     function checkOrientation() {
         const warning = document.getElementById('rotation-warning');
+        // Mendeteksi jika tinggi layar lebih besar dari lebar (Portrait)
         if (window.innerHeight > window.innerWidth && window.innerWidth < 900) {
             warning.style.display = 'flex';
         } else {
@@ -156,11 +158,12 @@
         }
     }
 
+    // Jalankan pengecekan saat layar di-resize atau diputar
     window.addEventListener('resize', checkOrientation);
     window.addEventListener('orientationchange', checkOrientation);
 
     function muatData() {
-        checkOrientation(); // Cek orientasi saat muat data
+        checkOrientation(); 
         const gid = document.getElementById('pilihKelas').value;
         const statusEl = document.getElementById('status');
         const tabelEl = document.getElementById('tabelHasil');
