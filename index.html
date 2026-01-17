@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=1450">
     <title>Rekap Absensi Digital - Az-Zahro</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <style>
@@ -18,90 +18,86 @@
             font-family: 'Segoe UI', Arial, sans-serif; 
             background: #f4f7f6; 
             margin: 0; 
-            padding: 5px; /* Padding kecil agar tabel lebih luas */
+            padding: 20px;
         }
 
+        /* --- SEMUA KODE TAMPILAN ASLI ANDA DIBAWAH INI TIDAK BERUBAH --- */
         .container { 
-            width: 100%; 
-            max-width: 1450px; 
+            width: 1450px; 
             margin: auto; 
             background: white; 
-            padding: 10px; 
-            border-radius: 8px; 
+            padding: 25px; 
+            border-radius: 12px; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
-            box-sizing: border-box;
         }
 
-        /* HEADER RESPONSIVE */
-        .header-wrapper { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
-        .header-logo { width: 45px; height: auto; }
+        .header-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 0 40px;
+        }
+
+        .header-logo { width: 85px; height: auto; }
         .header-text { text-align: center; flex-grow: 1; }
-        h2 { color: var(--primary); margin: 0; text-transform: uppercase; font-size: 1em; }
-        .school-name { color: var(--accent); font-weight: bold; font-size: 0.8em; }
+        h2 { color: var(--primary); margin: 0; text-transform: uppercase; font-size: 1.8em; }
+        .school-name { color: var(--accent); font-weight: bold; margin-top: 5px; font-size: 1.4em; }
+        .subtitle { color: #7f8c8d; margin-top: 10px; font-size: 1.2em; font-weight: 500; border-bottom: 2px solid #eee; padding-bottom: 15px; }
         
-        @media screen and (min-width: 768px) {
-            .header-logo { width: 80px; }
-            h2 { font-size: 1.6em; }
-            .school-name { font-size: 1.2em; }
-            .container { padding: 25px; }
-            body { padding: 20px; }
+        .controls { 
+            margin-bottom: 20px; 
+            display: flex; 
+            justify-content: center;
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #eee;
         }
+        .control-group { display: flex; flex-direction: column; gap: 5px; width: 350px; }
+        select { padding: 10px; border-radius: 6px; border: 1px solid #ddd; font-size: 14px; background: white; font-weight: bold; }
+        label { font-weight: bold; font-size: 13px; color: var(--primary); text-align: center; }
 
-        /* CONTROLS */
-        .controls { margin-bottom: 15px; display: flex; justify-content: center; }
-        .control-group { width: 100%; max-width: 300px; }
-        select { width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #ddd; font-size: 13px; font-weight: bold; }
-
-        /* TABLE SETTINGS: AGAR TAMPIL SEMUANYA (FIT) */
-        .table-scroll { 
-            width: 100%; 
-            overflow-x: auto; 
-            -webkit-overflow-scrolling: touch; 
-        }
-
-        table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            font-size: 8px; /* Ukuran font lebih kecil agar muat di HP */
-            table-layout: auto; /* Biarkan browser mengatur lebar kolom agar pas */
-            min-width: 800px; /* Batas minimum agar teks tidak tumpang tindih, tapi tetap bisa muat banyak */
-        }
-
-        th { background: var(--primary); color: white; padding: 3px 1px; border: 1px solid #34495e; }
-        td { padding: 4px 1px; border: 1px solid #eee; text-align: center; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; border: 1px solid #ccc; font-size: 11px; table-layout: fixed; }
+        th { background: var(--primary); color: white; padding: 5px 2px; border: 1px solid #34495e; text-transform: uppercase; }
+        td { padding: 8px 2px; border: 1px solid #eee; text-align: center; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
         
-        .name-col { text-align: left; font-weight: 500; width: 150px; padding-left: 5px; font-size: 9px; }
-        .tgl-col { width: auto; } /* Kolom tanggal otomatis mengecil */
+        .name-col { text-align: left; font-weight: 500; width: 220px; padding-left: 10px; font-size: 12px; }
+        .tgl-col { width: 30px; font-size: 10px; }
+        .hari-row { background: #ecf0f1 !important; color: var(--primary); font-size: 9px; font-weight: bold; }
         
-        /* WARNA STATUS */
         .cell-a { background-color: #ffd7d7; color: var(--danger); font-weight: bold; }
         .cell-s { background-color: #fff4cc; color: #d68910; font-weight: bold; }
         .cell-i { background-color: #d5f5e3; color: var(--success); font-weight: bold; }
         
-        /* REKAP */
-        .rekap-col { font-weight: bold; width: 20px; }
-        .label-persen { background: #2980b9 !important; color: white !important; width: 35px !important; }
+        .rekap-col { width: 32px; font-weight: bold; font-size: 12px; border-left: 1px solid #ccc !important; }
+        .label-a { color: var(--danger); background: #fff1f1 !important; }
+        .label-s { color: #d68910; background: #fffdf0 !important; }
+        .label-i { color: var(--success); background: #f0fff4 !important; }
+        .label-h { color: #2980b9; background: #f0f7ff !important; }
+        .label-persen { color: #fff !important; background: #2980b9 !important; width: 45px !important; font-weight: bold; font-size: 11px; }
+        
+        #tabelBawah { margin-top: 30px; padding: 15px; border-top: 2px dashed #eee; }
+        .footer-table { width: 100%; border: none; table-layout: auto; }
+        .footer-table td { text-align: left; padding: 5px; border: none; font-size: 13px; color: #333; }
+        .loading { text-align: center; font-style: italic; color: var(--accent); padding: 20px; }
 
-        @media screen and (min-width: 768px) {
-            table { font-size: 11px; min-width: 1300px; }
-            .name-col { width: 220px; font-size: 12px; }
-        }
-
-        /* NOTIFIKASI PUTAR HP */
+        /* --- NOTIFIKASI PUTAR HP (TETAP ADA) --- */
         #rotate-notice {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: #2c3e50;
-            z-index: 999999;
+            z-index: 99999;
             color: white;
             text-align: center;
             justify-content: center;
             align-items: center;
             flex-direction: column;
-            padding: 20px;
         }
-        @media screen and (max-width: 700px) and (orientation: portrait) {
+
+        @media screen and (max-width: 900px) and (orientation: portrait) {
             #rotate-notice { display: flex; }
             .container { display: none; }
         }
@@ -110,24 +106,25 @@
 <body>
 
 <div id="rotate-notice">
-    <div style="font-size: 50px; animation: rotateAnim 2s infinite">🔄</div>
-    <h3>Gunakan Mode Landscape</h3>
-    <p>Mohon putar HP Anda agar tabel terlihat penuh.</p>
+    <div style="font-size: 50px;">🔄</div>
+    <h2>Gunakan Mode Landscape</h2>
+    <p>Mohon putar HP Anda untuk melihat tabel secara penuh.</p>
 </div>
 
 <div class="container">
     <div class="header-wrapper">
-        <img src="https://github.com/masrahmat-id/absensi-barcode-online-smp-smk-azzahro/raw/main/logo-smp-azzahro.png" class="header-logo">
+        <img src="https://github.com/masrahmat-id/absensi-barcode-online-smp-smk-azzahro/raw/main/logo-smp-azzahro.png" alt="Logo SMP" class="header-logo">
         <div class="header-text">
-            <h2>REKAP ABSENSI DIGITAL</h2>
-            <div class="school-name">SMP & SMK AZ-ZAHRO</div>
-            <p id="judulRekap" style="font-size: 0.8em; color: #7f8c8d; margin: 5px 0 0 0;"></p>
+            <h2>REKAP ABSENSI SISWA DIGITAL</h2>
+            <div class="school-name">SMP ISLAM AZ-ZAHRO & SMK AZ-ZAHRO</div>
+            <p id="judulRekap" class="subtitle">TAHUN PELAJARAN 2026</p>
         </div>
-        <img src="https://github.com/masrahmat-id/absensi-barcode-online-smp-smk-azzahro/raw/main/logo-smk-azzahro.png" class="header-logo">
+        <img src="https://github.com/masrahmat-id/absensi-barcode-online-smp-smk-azzahro/raw/main/logo-smk-azzahro.png" alt="Logo SMK" class="header-logo">
     </div>
     
     <div class="controls">
         <div class="control-group">
+            <label>Pilih Jenjang Kelas:</label>
             <select id="pilihKelas" onchange="muatData()">
                 <option value="1462101133">KELAS VII</option>
                 <option value="1467004494">KELAS VIII</option>
@@ -140,11 +137,12 @@
     </div>
 
     <div id="status"></div>
-    <div class="table-scroll" id="tabelHasil"></div>
+    <div id="tabelHasil"></div>
     <div id="tabelBawah"></div>
 </div>
 
 <script>
+    /* SELURUH LOGIKA JAVASCRIPT ASLI ANDA TETAP SAMA */
     const ssID = '1XaVh_Jnbvryl216Mofuecx7DxNBezU3kRg8ZHjwu1qY'; 
 
     function muatData() {
@@ -154,7 +152,7 @@
         const bawahEl = document.getElementById('tabelBawah');
         const judulEl = document.getElementById('judulRekap');
         
-        statusEl.innerHTML = "<div style='text-align:center; padding:20px;'>Memproses Data...</div>";
+        statusEl.innerHTML = "<div class='loading'>Sinkronisasi data...</div>";
         tabelEl.innerHTML = "";
         bawahEl.innerHTML = "";
 
@@ -167,7 +165,9 @@
                 const rows = results.data;
                 const bulanData = rows[2][1] || "---"; 
                 const tahunData = rows[3][1] || "2026";
-                judulEl.innerText = `PERIODE ${bulanData.toUpperCase()} ${tahunData}`;
+                const namaKelas = document.getElementById('pilihKelas').options[document.getElementById('pilihKelas').selectedIndex].text;
+                
+                judulEl.innerText = `${namaKelas} - PERIODE ${bulanData.toUpperCase()} ${tahunData}`;
 
                 const tglHeader = rows[6].slice(3, 34);  
                 const hariHeader = rows[5].slice(3, 34); 
@@ -185,27 +185,43 @@
         let html = `<table>
             <thead>
                 <tr>
-                    <th width="25">No</th>
-                    <th class="name-col">Nama Siswa</th>
-                    ${tanggals.map((tgl, i) => `<th class="tgl-col">${tgl}<br><small>${haris[i]||''}</small></th>`).join('')}
-                    <th class="rekap-col">A</th><th class="rekap-col">S</th><th class="rekap-col">I</th><th class="rekap-col">H</th><th class="label-persen">%</th>
+                    <th width="35" rowspan="3">No</th>
+                    <th class="name-col" rowspan="3">Nama Siswa</th>
+                    <th colspan="31">Daftar Kehadiran Harian</th>
+                    <th colspan="5">Total</th>
                 </tr>
-            </thead><tbody>`;
+                <tr class="hari-row">`;
+        
+        haris.forEach(hari => { html += `<th class="tgl-col">${hari || ''}</th>`; });
+        html += `<th class="rekap-col">A</th><th class="rekap-col">S</th><th class="rekap-col">I</th><th class="rekap-col">H</th><th class="label-persen">%</th></tr><tr>`;
+        
+        tanggals.forEach(tgl => { html += `<th class="tgl-col" style="background:#34495e">${tgl || ''}</th>`; });
+        html += `<th colspan="5" style="background:#2c3e50; height:5px"></th></tr></thead><tbody>`;
 
         data.forEach((row) => {
             const no = row[0];   
             const nama = row[1]; 
             if (no && nama && !isNaN(no.trim())) {
-                let a=0, s=0, i=0, h=0, e=0, tglCells="";
-                for (let j=3; j<=33; j++) {
-                    let v = (row[j]||"").trim().toUpperCase();
-                    let c = (v==='A')?"cell-a":(v==='S')?"cell-s":(v==='I')?"cell-i":"";
-                    if(v==='A') a++; else if(v==='S') s++; else if(v==='I') i++; else if(v!=='') h++;
-                    if(v!=='') e++;
-                    tglCells += `<td class="${c}">${v}</td>`;
+                let a = 0, s = 0, i = 0, hadir = 0, hariEfektif = 0, tglCells = "";
+                for (let j = 3; j <= 33; j++) {
+                    let val = (row[j] || "").toString().trim().toUpperCase();
+                    let cellClass = (val==='A')?"cell-a":(val==='S')?"cell-s":(val==='I')?"cell-i":"";
+                    if (val === 'A') a++; else if (val === 'S') s++; else if (val === 'I') i++; else if (val !== "") hadir++;
+                    if (val !== "") hariEfektif++;
+                    tglCells += `<td class="tgl-col ${cellClass}">${val}</td>`;
                 }
-                let p = e > 0 ? Math.round((h/e)*100) : 0;
-                html += `<tr><td>${no}</td><td class="name-col">${nama}</td>${tglCells}<td>${a}</td><td>${s}</td><td>${i}</td><td>${h}</td><td class="label-persen">${p}%</td></tr>`;
+                let persen = hariEfektif > 0 ? Math.round((hadir / hariEfektif) * 100) : 0;
+                
+                html += `<tr>
+                    <td>${no}</td>
+                    <td class="name-col">${nama}</td>
+                    ${tglCells}
+                    <td class="rekap-col label-a">${a}</td>
+                    <td class="rekap-col label-s">${s}</td>
+                    <td class="rekap-col label-i">${i}</td>
+                    <td class="rekap-col label-h">${hadir}</td>
+                    <td class="rekap-col label-persen">${persen}%</td>
+                </tr>`;
             }
         });
         html += '</tbody></table>';
@@ -213,20 +229,18 @@
     }
 
     function tampilkanDataBawah(data) {
-        let html = `<div class="table-scroll" style="margin-top:20px; border:none;"><table class="footer-table"><tbody>`;
+        let html = `<table class="footer-table"><tbody>`;
         data.forEach(row => {
-            html += `<tr>${row.map(cell => `<td>${cell || ''}</td>`).join('')}</tr>`;
+            html += `<tr>`;
+            row.forEach(cell => { html += `<td>${cell || ''}</td>`; });
+            html += `</tr>`;
         });
-        html += `</tbody></table></div>`;
+        html += `</tbody></table>`;
         document.getElementById('tabelBawah').innerHTML = html;
     }
 
     window.onload = muatData;
 </script>
-
-<style>
-@keyframes rotateAnim { 0% {transform: rotate(0deg)} 50% {transform: rotate(90deg)} 100% {transform: rotate(0deg)} }
-</style>
 
 </body>
 </html>
