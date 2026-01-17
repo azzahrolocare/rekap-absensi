@@ -25,40 +25,41 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
         }
 
-        h2 { text-align: center; color: var(--primary); margin: 0; }
-        .subtitle { text-align: center; color: #7f8c8d; margin-bottom: 25px; font-size: 0.9em; }
+        h2 { text-align: center; color: var(--primary); margin: 0; text-transform: uppercase; }
+        .subtitle { text-align: center; color: #7f8c8d; margin-bottom: 25px; font-size: 1.1em; font-weight: bold; }
         
         .controls { 
             margin-bottom: 20px; 
             display: flex; 
             align-items: flex-end; 
             gap: 15px; 
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
         }
 
-        .select-group { flex: 1; }
+        .control-group { display: flex; flex-direction: column; gap: 5px; }
+        .flex-grow { flex-grow: 1; }
 
-        select { 
-            width: 100%; 
-            padding: 12px; 
-            border-radius: 8px; 
-            border: 2px solid #ddd; 
-            font-size: 16px; 
-            cursor: pointer; 
+        select, input { 
+            padding: 10px; 
+            border-radius: 6px; 
+            border: 1px solid #ddd; 
+            font-size: 14px; 
             background: white; 
         }
+
+        label { font-weight: bold; font-size: 13px; color: var(--primary); }
         
         .btn-database {
-            display: inline-block;
-            text-align: center;
             background-color: var(--success);
             color: white;
             text-decoration: none;
-            padding: 12px 25px;
-            border-radius: 8px;
+            padding: 11px 20px;
+            border-radius: 6px;
             font-weight: bold;
             font-size: 14px;
-            white-space: nowrap;
-            transition: background 0.3s;
+            transition: 0.3s;
         }
         .btn-database:hover { background-color: #27ae60; }
 
@@ -72,7 +73,6 @@
         .hari-row { background: #ecf0f1; color: var(--primary); font-size: 9px; }
         .rekap-col { width: 40px; font-weight: bold; background: #f0f4f8; font-size: 12px; }
         
-        /* Pewarnaan khusus absensi */
         .cell-a { background-color: #ffd7d7; color: var(--danger); font-weight: bold; }
         .cell-s { background-color: #fff4cc; color: #d68910; font-weight: bold; }
         .cell-i { background-color: #d5f5e3; color: var(--success); font-weight: bold; }
@@ -90,11 +90,11 @@
 
 <div class="container">
     <h2>REKAP ABSENSI SISWA</h2>
-    <p class="subtitle">SMP ISLAM AZ-ZAHRO & SMK AZ-ZAHRO</p>
+    <p id="judulRekap" class="subtitle">SMP & SMK AZ-ZAHRO</p>
     
     <div class="controls">
-        <div class="select-group">
-            <label for="pilihKelas" style="display:block; margin-bottom:8px; font-weight:bold;">Pilih Jenjang Kelas:</label>
+        <div class="control-group flex-grow">
+            <label>Pilih Kelas:</label>
             <select id="pilihKelas" onchange="muatData()">
                 <option value="1462101133">KELAS VII</option>
                 <option value="1467004494">KELAS VIII</option>
@@ -104,9 +104,32 @@
                 <option value="2001221833">KELAS XII</option>
             </select>
         </div>
+
+        <div class="control-group">
+            <label>Bulan:</label>
+            <select id="pilihBulan" onchange="updateJudul()">
+                <option value="Januari">Januari</option>
+                <option value="Februari">Februari</option>
+                <option value="Maret">Maret</option>
+                <option value="April">April</option>
+                <option value="Mei">Mei</option>
+                <option value="Juni">Juni</option>
+                <option value="Juli">Juli</option>
+                <option value="Agustus">Agustus</option>
+                <option value="September">September</option>
+                <option value="Oktober">Oktober</option>
+                <option value="November">November</option>
+                <option value="Desember">Desember</option>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <label>Tahun:</label>
+            <input type="number" id="inputTahun" value="2024" onchange="updateJudul()" style="width: 80px;">
+        </div>
         
         <a href="https://docs.google.com/spreadsheets/d/1XaVh_Jnbvryl216Mofuecx7DxNBezU3kRg8ZHjwu1qY/" target="_blank" class="btn-database">
-            📂 Data Base Absensi
+            📂 Data Base
         </a>
     </div>
 
@@ -116,6 +139,14 @@
 
 <script>
     const ssID = '1XaVh_Jnbvryl216Mofuecx7DxNBezU3kRg8ZHjwu1qY'; 
+
+    function updateJudul() {
+        const bulan = document.getElementById('pilihBulan').value;
+        const tahun = document.getElementById('inputTahun').value;
+        const kelas = document.getElementById('pilihKelas').options[document.getElementById('pilihKelas').selectedIndex].text;
+        document.getElementById('judulRekap').innerText = `${kelas} - PERIODE ${bulan} ${tahun}`;
+        muatData();
+    }
 
     function muatData() {
         const gid = document.getElementById('pilihKelas').value;
@@ -133,13 +164,13 @@
             complete: function(results) {
                 const rows = results.data;
                 if (rows.length < 8) {
-                    statusEl.innerHTML = "<div class='error-msg'>Data tidak ditemukan atau format salah.</div>";
+                    statusEl.innerHTML = "<div class='error-msg'>Data tidak ditemukan.</div>";
                     return;
                 }
                 
-                const tglHeader = rows[4].slice(3, 34);  // Baris 5: Tanggal 1-31
-                const hariHeader = rows[5].slice(3, 34); // Baris 6: Nama Hari
-                const dataSiswa = rows.slice(7);         // Baris 8 dst: Data Siswa
+                const tglHeader = rows[4].slice(3, 34);  
+                const hariHeader = rows[5].slice(3, 34); 
+                const dataSiswa = rows.slice(7);         
                 
                 tampilkanTabel(tglHeader, hariHeader, dataSiswa);
                 statusEl.innerHTML = "";
@@ -156,19 +187,17 @@
                 <tr>
                     <th width="35" rowspan="3">No</th>
                     <th class="name-col" rowspan="3">Nama Siswa</th>
-                    <th colspan="31">Daftar Kehadiran Harian</th>
-                    <th colspan="5">Rekap</th>
+                    <th colspan="31">Kehadiran Harian</th>
+                    <th colspan="5">Rekapitulasi</th>
                 </tr>
                 <tr class="hari-row">`;
         
-        // Baris Nama Hari (Sen, Sel, dst)
         haris.forEach(hari => {
             html += `<th class="tgl-col">${hari || ''}</th>`;
         });
 
-        html += `<th colspan="5" style="background:#ddd">TOTAL</th></tr><tr>`;
+        html += `<th colspan="5" style="background:#ddd">Total</th></tr><tr>`;
 
-        // Baris Angka Tanggal (1, 2, 3...)
         tanggals.forEach(tgl => {
             html += `<th class="tgl-col" style="background:#34495e">${tgl || ''}</th>`;
         });
@@ -203,7 +232,6 @@
                     else if (val !== "") { hadir++; }
 
                     if (val !== "") hariEfektif++;
-                    
                     tglCells += `<td class="tgl-col ${cellClass}">${val}</td>`;
                 }
 
@@ -223,10 +251,11 @@
         });
 
         html += '</tbody></table>';
-        document.getElementById('tabelHasil').innerHTML = counter === 0 ? "<div class='error-msg'>Tidak ada data ditemukan.</div>" : html;
+        document.getElementById('tabelHasil').innerHTML = counter === 0 ? "<div class='error-msg'>Data tidak ditemukan.</div>" : html;
     }
 
-    window.onload = muatData;
+    // Jalankan pertama kali
+    window.onload = updateJudul;
 </script>
 
 </body>
