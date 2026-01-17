@@ -22,7 +22,7 @@
             min-width: 1450px; 
         }
 
-        /* --- SIMBOL HP BERPUTAR --- */
+        /* --- SIMBOL HP BERPUTAR (CSS ONLY) --- */
         #rotation-warning {
             display: none;
             position: fixed;
@@ -40,12 +40,37 @@
         }
 
         .phone-container {
-            width: 50px; height: 90px;
+            width: 50px;
+            height: 90px;
             border: 3px solid white;
             border-radius: 6px;
             position: relative;
             margin-bottom: 40px;
             animation: rotateDevice 2s ease-in-out infinite;
+        }
+
+        .phone-container::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 8px;
+            border: 1px solid white;
+            border-radius: 50%;
+        }
+
+        .phone-container::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 12px;
+            height: 2px;
+            background: white;
+            border-radius: 2px;
         }
 
         @keyframes rotateDevice {
@@ -60,8 +85,8 @@
             body { min-width: auto; overflow: hidden; }
             .container { display: none; }
         }
+        /* ----------------------------------------- */
 
-        /* --- KONTINER UTAMA --- */
         .container { 
             width: 1450px; 
             margin: auto; 
@@ -71,24 +96,6 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
         }
 
-        /* PERBAIKAN: Supaya tidak numpuk saat Full Screen di HP */
-        .container:fullscreen {
-            width: 1450px !important; /* Paksa lebar tetap 1450px */
-            height: 100vh;
-            overflow: auto; /* Izinkan scroll jika layar HP kecil */
-            background: #f4f7f6;
-            padding: 20px;
-            border-radius: 0;
-        }
-        
-        /* Tambahan untuk browser webkit (Chrome/Safari/Opera) */
-        .container:-webkit-full-screen {
-            width: 1450px !important;
-            height: 100vh;
-            overflow: auto;
-            background: #f4f7f6;
-        }
-
         .header-wrapper { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding: 0 40px; }
         .header-logo { width: 85px; height: auto; }
         .header-text { text-align: center; flex-grow: 1; }
@@ -96,6 +103,7 @@
         .school-name { color: var(--accent); font-weight: bold; margin-top: 5px; font-size: 1.4em; }
         .subtitle { color: #7f8c8d; margin-top: 10px; font-size: 1.2em; font-weight: 500; border-bottom: 2px solid #eee; padding-bottom: 15px; }
         
+        /* MODIFIKASI KONTROL BERJAJAR */
         .controls { 
             margin-bottom: 20px; 
             display: flex; 
@@ -106,56 +114,42 @@
             border-radius: 8px; 
             border: 1px solid #eee; 
         }
-
-        .control-group { display: flex; gap: 15px; align-items: center; }
-
-        /* Tombol Fullscreen & Refresh */
-        .btn-group { display: flex; gap: 10px; }
+        .control-group { display: flex; flex-direction: row; align-items: center; gap: 15px; }
         
-        .btn-custom {
-            padding: 10px 18px;
+        /* Gaya Tombol Refresh */
+        .btn-refresh {
+            background-color: var(--accent);
+            color: white;
             border: none;
+            padding: 10px 20px;
             border-radius: 6px;
             cursor: pointer;
             font-weight: bold;
-            font-size: 13px;
+            font-size: 14px;
             display: flex;
             align-items: center;
             gap: 8px;
-            color: white;
+            transition: all 0.3s ease;
             text-transform: uppercase;
-            transition: 0.3s;
         }
 
-        .btn-full { background: #16a085; }
-        .btn-full:hover { background: #1abc9c; }
-        .btn-refresh { background: var(--accent); }
-        .btn-refresh:hover { background: #2980b9; }
-
-        /* Ikon Kaca Pembesar */
-        .icon-zoom {
-            width: 14px; height: 14px;
-            border: 2px solid #fff;
-            border-radius: 50%;
-            position: relative;
-        }
-        .icon-zoom::after {
-            content: '';
-            position: absolute;
-            width: 2px; height: 6px;
-            background: #fff;
-            bottom: -4px; right: -3px;
-            transform: rotate(-45deg);
+        .btn-refresh:hover {
+            background-color: #2980b9;
+            box-shadow: 0 2px 8px rgba(52, 152, 219, 0.4);
+            transform: translateY(-1px);
         }
 
         .icon-refresh {
-            width: 14px; height: 14px;
+            width: 14px;
+            height: 14px;
             border: 2px solid #fff;
             border-top: 2px solid transparent;
             border-radius: 50%;
         }
-
-        /* Tabel & Data */
+        
+        select { padding: 10px; border-radius: 6px; border: 1px solid #ddd; font-size: 14px; background: white; font-weight: bold; text-transform: uppercase; }
+        label { font-weight: bold; font-size: 14px; color: var(--primary); text-transform: uppercase; }
+        
         table { width: 100%; border-collapse: collapse; margin-top: 10px; border: 1px solid #ccc; font-size: 11px; table-layout: fixed; }
         th { background: var(--primary); color: white; padding: 5px 2px; border: 1px solid #34495e; text-transform: uppercase; }
         td { padding: 8px 2px; border: 1px solid #eee; text-align: center; }
@@ -176,9 +170,6 @@
         .footer-table { width: 100%; border: none; table-layout: auto; }
         .footer-table td { text-align: left; padding: 5px; border: none; font-size: 13px; color: #333; }
         .loading { text-align: center; font-style: italic; color: var(--accent); padding: 20px; }
-        
-        select { padding: 10px; border-radius: 6px; border: 1px solid #ddd; font-size: 14px; background: white; font-weight: bold; text-transform: uppercase; }
-        label { font-weight: bold; font-size: 14px; color: var(--primary); text-transform: uppercase; }
     </style>
 </head>
 <body>
@@ -191,7 +182,7 @@
     </p>
 </div>
 
-<div class="container" id="containerUtama">
+<div class="container">
     <div class="header-wrapper">
         <img src="https://github.com/masrahmat-id/absensi-barcode-online-smp-smk-azzahro/raw/main/logo-smp-azzahro.png" alt="Logo SMP" class="header-logo">
         <div class="header-text">
@@ -215,16 +206,10 @@
             </select>
         </div>
 
-        <div class="btn-group">
-            <button class="btn-custom btn-full" onclick="keLayarPenuh()">
-                <div class="icon-zoom"></div>
-                FULL SCREEN
-            </button>
-            <button class="btn-custom btn-refresh" onclick="muatData()">
-                <div class="icon-refresh"></div>
-                REFRESH DATA
-            </button>
-        </div>
+        <button class="btn-refresh" onclick="muatData()">
+            <span class="icon-refresh"></span>
+            REFRESH DATA
+        </button>
     </div>
 
     <div id="status"></div>
@@ -241,18 +226,6 @@
             warning.style.display = 'flex';
         } else {
             warning.style.display = 'none';
-        }
-    }
-
-    // FUNGSI FULLSCREEN YANG DIPERBAIKI
-    function keLayarPenuh() {
-        const elem = document.getElementById("containerUtama");
-        if (!document.fullscreenElement) {
-            if (elem.requestFullscreen) { elem.requestFullscreen(); }
-            else if (elem.webkitRequestFullscreen) { elem.webkitRequestFullscreen(); }
-            else if (elem.msRequestFullscreen) { elem.msRequestFullscreen(); }
-        } else {
-            if (document.exitFullscreen) { document.exitFullscreen(); }
         }
     }
 
