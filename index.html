@@ -93,7 +93,8 @@
 
 <div class="container">
     <h2>REKAP ABSENSI SISWA DIGITAL</h2>
-    <p id="judulRekap" class="subtitle">MENGHUBUNGKAN KE DATABASE...</p>
+    <p class="subtitle" style="margin-bottom: 5px; border-bottom: none;">SMP ISLAM AZ-ZAHRO & SMK AZ-ZAHRO</p>
+    <p id="judulRekap" class="subtitle" style="font-size: 1em; color: #34495e;">MENGHUBUNGKAN KE DATABASE...</p>
     
     <div class="controls">
         <div class="control-group flex-grow">
@@ -107,16 +108,9 @@
                 <option value="2001221833">KELAS XII</option>
             </select>
         </div>
-
-        <div class="control-group">
-            <label>Opsi:</label>
-            <button onclick="muatData()" style="padding: 10px; cursor: pointer; border-radius: 6px; border: 1px solid #ddd; background: white; font-weight: bold;">
-                🔄 Refresh Data
-            </button>
-        </div>
         
         <a href="https://docs.google.com/spreadsheets/d/1XaVh_Jnbvryl216Mofuecx7DxNBezU3kRg8ZHjwu1qY/" target="_blank" class="btn-database">
-            📂 Buka Database Absensi
+            📂 Data Base Absensi
         </a>
     </div>
 
@@ -136,7 +130,6 @@
         statusEl.innerHTML = "<div class='loading'>Sinkronisasi data terbaru...</div>";
         tabelEl.innerHTML = "";
 
-        // Link CSV dengan timestamp agar tidak terkena cache (selalu ambil data terbaru dari Sheet)
         const url = `https://docs.google.com/spreadsheets/d/${ssID}/export?format=csv&gid=${gid}&t=${new Date().getTime()}`;
 
         Papa.parse(url, {
@@ -149,12 +142,12 @@
                     return;
                 }
                 
-                // Mengambil info Bulan dan Tahun langsung dari sel di Sheet
                 const bulanData = rows[1][1] || "---"; 
                 const tahunData = rows[2][1] || "---";
                 const namaKelas = document.getElementById('pilihKelas').options[document.getElementById('pilihKelas').selectedIndex].text;
                 
-                judulEl.innerText = `${namaKelas} - PERIODE ${bulanData.toUpperCase()} ${tahunData}`;
+                // Menambahkan teks "TAHUN" pada periode
+                judulEl.innerText = `${namaKelas} - PERIODE BULAN ${bulanData.toUpperCase()} TAHUN ${tahunData}`;
 
                 const tglHeader = rows[4].slice(3, 34);  
                 const hariHeader = rows[5].slice(3, 34); 
@@ -164,7 +157,7 @@
                 statusEl.innerHTML = "";
             },
             error: function(err) {
-                statusEl.innerHTML = `<div class='error-msg'><strong>Gagal Mengambil Data</strong><br>Pastikan koneksi internet stabil.</div>`;
+                statusEl.innerHTML = `<div class='error-msg'><strong>Gagal Mengambil Data</strong></div>`;
             }
         });
     }
