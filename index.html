@@ -26,10 +26,8 @@
         #rotation-warning {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
             background: rgba(44, 62, 80, 0.98);
             color: white;
             z-index: 99999;
@@ -40,8 +38,7 @@
         }
 
         .phone-container {
-            width: 50px;
-            height: 90px;
+            width: 50px; height: 90px;
             border: 3px solid white;
             border-radius: 6px;
             position: relative;
@@ -50,27 +47,15 @@
         }
 
         .phone-container::after {
-            content: '';
-            position: absolute;
-            bottom: 5px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 8px;
-            height: 8px;
-            border: 1px solid white;
-            border-radius: 50%;
+            content: ''; position: absolute; bottom: 5px; left: 50%;
+            transform: translateX(-50%); width: 8px; height: 8px;
+            border: 1px solid white; border-radius: 50%;
         }
 
         .phone-container::before {
-            content: '';
-            position: absolute;
-            top: 8px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 12px;
-            height: 2px;
-            background: white;
-            border-radius: 2px;
+            content: ''; position: absolute; top: 8px; left: 50%;
+            transform: translateX(-50%); width: 12px; height: 2px;
+            background: white; border-radius: 2px;
         }
 
         @keyframes rotateDevice {
@@ -107,7 +92,7 @@
         select { padding: 10px; border-radius: 6px; border: 1px solid #ddd; font-size: 14px; background: white; font-weight: bold; }
         label { font-weight: bold; font-size: 13px; color: var(--primary); text-align: center; }
 
-        /* --- TABEL --- */
+        /* --- TABEL UTAMA --- */
         table { width: 100%; border-collapse: collapse; margin-top: 10px; border: 1px solid #ccc; font-size: 11px; table-layout: fixed; }
         th { background: var(--primary); color: white; padding: 5px 2px; border: 1px solid #34495e; text-transform: uppercase; }
         td { padding: 8px 2px; border: 1px solid #eee; text-align: center; }
@@ -125,20 +110,32 @@
         .label-h { color: #2980b9; background: #f0f7ff !important; }
         .label-persen { color: #fff !important; background: #2980b9 !important; width: 45px !important; font-weight: bold; font-size: 11px; }
 
-        /* --- PERUBAHAN DISINI: TABEL BAWAH GESER KE KANAN --- */
+        /* --- PERUBAHAN DISINI: TATA LETAK DATA TAMBAHAN (3 KOLOM) --- */
         #tabelBawah { 
             margin-top: 30px; 
-            padding: 15px; 
-            border-top: 2px dashed #eee; 
+            padding: 20px; 
+            border-top: 2px dashed #ddd; 
             display: flex;
-            justify-content: flex-end; /* Menggeser tabel ke arah kanan */
+            justify-content: space-between; /* Membagi ke Kiri, Tengah, Kanan */
+            align-items: flex-start;
         }
-        .footer-table { 
-            width: auto; /* Lebar otomatis sesuai isi agar bisa digeser */
-            border: none; 
-            table-layout: auto; 
+
+        .footer-section {
+            flex: 1; /* Memberikan ruang yang sama untuk ketiga bagian */
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
         }
-        .footer-table td { text-align: left; padding: 5px 15px; border: none; font-size: 13px; color: #333; }
+
+        .section-left { text-align: left; }
+        .section-center { text-align: center; }
+        .section-right { text-align: right; padding-right: 10px; }
+
+        .footer-row {
+            font-size: 13px;
+            color: #333;
+            min-height: 20px;
+        }
         
         .loading { text-align: center; font-style: italic; color: var(--accent); padding: 20px; }
     </style>
@@ -226,7 +223,7 @@
                 const tglHeader = rows[6].slice(3, 34);  
                 const hariHeader = rows[5].slice(3, 34); 
                 const dataSiswa = rows.slice(7, 37); 
-                const dataTambahan = rows.slice(38, 43);
+                const dataTambahan = rows.slice(38, 43); // Mengambil baris data tambahan
                 
                 tampilkanTabel(tglHeader, hariHeader, dataSiswa);
                 tampilkanDataBawah(dataTambahan);
@@ -283,18 +280,25 @@
     }
 
     function tampilkanDataBawah(data) {
-        let html = `<table class="footer-table"><tbody>`;
+        // Logika: Data tambahan biasanya berbentuk baris dimana:
+        // Index 0/1 untuk Kiri, Index 2/3 untuk Tengah, Index 4 keatas untuk Kanan
+        let leftHTML = "", centerHTML = "", rightHTML = "";
+
         data.forEach(row => {
-            html += `<tr>`;
-            // Hanya tampilkan jika cell tidak kosong untuk menjaga kerapihan
-            row.forEach(cell => { 
-                if(cell && cell.trim() !== "") {
-                    html += `<td>${cell}</td>`; 
-                }
-            });
-            html += `</tr>`;
+            // Bagian Kiri (Kolom A-B di Sheets)
+            leftHTML += `<div class="footer-row">${row[0] || ''} ${row[1] || ''}</div>`;
+            // Bagian Tengah (Kolom C-D di Sheets)
+            centerHTML += `<div class="footer-row">${row[2] || ''} ${row[3] || ''}</div>`;
+            // Bagian Kanan (Kolom E-G di Sheets)
+            rightHTML += `<div class="footer-row">${row[4] || ''} ${row[5] || ''} ${row[6] || ''}</div>`;
         });
-        html += `</tbody></table>`;
+
+        let html = `
+            <div class="footer-section section-left">${leftHTML}</div>
+            <div class="footer-section section-center">${centerHTML}</div>
+            <div class="footer-section section-right">${rightHTML}</div>
+        `;
+        
         document.getElementById('tabelBawah').innerHTML = html;
     }
 
