@@ -143,11 +143,13 @@
                     return;
                 }
                 
-                // Menampilkan nama kelas, bulan dari sheet, dan tahun tetap 2026
-                const bulanData = rows[1][1] || "---"; 
+                // Mengambil Bulan dari B3 (index baris 2, index kolom 1)
+                // Mengambil Tahun dari B4 (index baris 3, index kolom 1)
+                const bulanData = rows[2][1] || "---"; 
+                const tahunData = rows[3][1] || "2026";
                 const namaKelas = document.getElementById('pilihKelas').options[document.getElementById('pilihKelas').selectedIndex].text;
                 
-                judulEl.innerText = `${namaKelas} - PERIODE ${bulanData.toUpperCase()} 2026`;
+                judulEl.innerText = `${namaKelas} - PERIODE ${bulanData.toUpperCase()} ${tahunData}`;
 
                 const tglHeader = rows[4].slice(3, 34);  
                 const hariHeader = rows[5].slice(3, 34); 
