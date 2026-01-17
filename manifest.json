@@ -1,9 +1,9 @@
 {
   "name": "Rekap Absensi Digital - Az-Zahro",
   "short_name": "Az-Zahro",
-  "start_url": "/rekap-absensi/",
+  "start_url": "./rekap-absensi/",
   "display": "standalone",
-  "scope": "/rekap-absensi/",
+  "scope": "./rekap-absensi/",
   "theme_color": "#2ecc71",
   "background_color": "#ffffff"
 }
