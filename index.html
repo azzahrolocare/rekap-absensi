@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=1400">
+    <meta name="viewport" content="width=1500">
     <title>Rekap Absensi Digital - Az-Zahro</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <style>
@@ -13,11 +13,11 @@
             background: #f4f7f6; 
             margin: 0; 
             padding: 20px;
-            min-width: 1400px; 
+            min-width: 1500px; 
         }
 
         .container { 
-            width: 1350px; 
+            width: 1450px; 
             margin: auto; 
             background: white; 
             padding: 25px; 
@@ -62,20 +62,25 @@
         }
         .btn-database:hover { background-color: #27ae60; }
 
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; border: 1px solid #ccc; font-size: 12px; table-layout: fixed; }
-        th { background: var(--primary); color: white; padding: 8px 2px; border: 1px solid #34495e; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; border: 1px solid #ccc; font-size: 11px; table-layout: fixed; }
+        th { background: var(--primary); color: white; padding: 5px 2px; border: 1px solid #34495e; text-transform: uppercase; }
         td { padding: 8px 2px; border: 1px solid #eee; text-align: center; }
         tr:nth-child(even) { background-color: #f9f9f9; }
         
-        .name-col { text-align: left; font-weight: 500; width: 220px; padding-left: 10px; }
-        .tgl-col { width: 25px; font-size: 10px; background: #fcfcfc; }
-        .rekap-col { width: 45px; font-weight: bold; background: #f0f4f8; }
+        .name-col { text-align: left; font-weight: 500; width: 200px; padding-left: 10px; font-size: 12px; }
+        .tgl-col { width: 30px; font-size: 10px; }
+        .hari-row { background: #ecf0f1; color: var(--primary); font-size: 9px; }
+        .rekap-col { width: 40px; font-weight: bold; background: #f0f4f8; font-size: 12px; }
+        
+        /* Pewarnaan khusus absensi */
+        .cell-a { background-color: #ffd7d7; color: var(--danger); font-weight: bold; }
+        .cell-s { background-color: #fff4cc; color: #d68910; font-weight: bold; }
+        .cell-i { background-color: #d5f5e3; color: var(--success); font-weight: bold; }
         
         .label-a { color: var(--danger); }
-        .label-s { color: var(--warning); }
+        .label-s { color: #d68910; }
         .label-i { color: var(--success); }
-        .label-hadir { color: var(--primary); }
-        .label-persen { color: #2980b9; width: 60px !important; }
+        .label-persen { color: #2980b9; width: 55px !important; }
         
         .loading { text-align: center; font-style: italic; color: var(--accent); padding: 20px; }
         .error-msg { text-align: center; color: var(--danger); background: #fdf2f2; padding: 15px; border-radius: 8px; border: 1px solid #f9d7d7; }
@@ -128,15 +133,15 @@
             complete: function(results) {
                 const rows = results.data;
                 if (rows.length < 8) {
-                    statusEl.innerHTML = "<div class='error-msg'>Data tidak ditemukan.</div>";
+                    statusEl.innerHTML = "<div class='error-msg'>Data tidak ditemukan atau format salah.</div>";
                     return;
                 }
                 
-                // Ambil header tanggal dari baris ke-5 (index 4)
-                const headerTanggal = rows[4].slice(3, 34); 
-                const dataSiswa = rows.slice(7); 
+                const tglHeader = rows[4].slice(3, 34);  // Baris 5: Tanggal 1-31
+                const hariHeader = rows[5].slice(3, 34); // Baris 6: Nama Hari
+                const dataSiswa = rows.slice(7);         // Baris 8 dst: Data Siswa
                 
-                tampilkanTabel(headerTanggal, dataSiswa);
+                tampilkanTabel(tglHeader, hariHeader, dataSiswa);
                 statusEl.innerHTML = "";
             },
             error: function(err) {
@@ -145,20 +150,27 @@
         });
     }
 
-    function tampilkanTabel(tanggals, data) {
+    function tampilkanTabel(tanggals, haris, data) {
         let html = `<table>
             <thead>
                 <tr>
-                    <th width="30" rowspan="2">No</th>
-                    <th class="name-col" rowspan="2">Nama Siswa</th>
-                    <th colspan="31">Tanggal</th>
-                    <th colspan="5">Rekapitulasi</th>
+                    <th width="35" rowspan="3">No</th>
+                    <th class="name-col" rowspan="3">Nama Siswa</th>
+                    <th colspan="31">Daftar Kehadiran Harian</th>
+                    <th colspan="5">Rekap</th>
                 </tr>
-                <tr>`;
+                <tr class="hari-row">`;
         
-        // Header Tanggal 1-31
+        // Baris Nama Hari (Sen, Sel, dst)
+        haris.forEach(hari => {
+            html += `<th class="tgl-col">${hari || ''}</th>`;
+        });
+
+        html += `<th colspan="5" style="background:#ddd">TOTAL</th></tr><tr>`;
+
+        // Baris Angka Tanggal (1, 2, 3...)
         tanggals.forEach(tgl => {
-            html += `<th class="tgl-col">${tgl || ''}</th>`;
+            html += `<th class="tgl-col" style="background:#34495e">${tgl || ''}</th>`;
         });
 
         html += `
@@ -181,18 +193,18 @@
                 let a = 0, s = 0, i = 0, hadir = 0, hariEfektif = 0;
                 let tglCells = "";
 
-                // Loop Tanggal (Kolom D sampai AH / Index 3-33)
                 for (let j = 3; j <= 33; j++) {
                     let val = (row[j] || "").toString().trim().toUpperCase();
-                    tglCells += `<td class="tgl-col">${val}</td>`;
+                    let cellClass = "";
                     
-                    if (val !== "") {
-                        hariEfektif++;
-                        if (val === 'A') a++;
-                        else if (val === 'S') s++;
-                        else if (val === 'I') i++;
-                        else hadir++;
-                    }
+                    if (val === 'A') { a++; cellClass = "cell-a"; }
+                    else if (val === 'S') { s++; cellClass = "cell-s"; }
+                    else if (val === 'I') { i++; cellClass = "cell-i"; }
+                    else if (val !== "") { hadir++; }
+
+                    if (val !== "") hariEfektif++;
+                    
+                    tglCells += `<td class="tgl-col ${cellClass}">${val}</td>`;
                 }
 
                 let persen = hariEfektif > 0 ? ((hadir / hariEfektif) * 100).toFixed(1) : 0;
@@ -211,7 +223,7 @@
         });
 
         html += '</tbody></table>';
-        document.getElementById('tabelHasil').innerHTML = counter === 0 ? "<div class='error-msg'>Tidak ada data.</div>" : html;
+        document.getElementById('tabelHasil').innerHTML = counter === 0 ? "<div class='error-msg'>Tidak ada data ditemukan.</div>" : html;
     }
 
     window.onload = muatData;
