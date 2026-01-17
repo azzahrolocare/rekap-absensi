@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=1100">
+    <meta name="viewport" content="width=1400">
     <title>Rekap Absensi Digital - Az-Zahro</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <style>
@@ -13,12 +13,11 @@
             background: #f4f7f6; 
             margin: 0; 
             padding: 20px;
-            /* Memastikan body tidak menyusut lebih kecil dari desain desktop */
-            min-width: 1100px; 
+            min-width: 1400px; 
         }
 
         .container { 
-            width: 1050px; /* Ukuran tetap (fixed width) seperti desktop */
+            width: 1350px; 
             margin: auto; 
             background: white; 
             padding: 25px; 
@@ -33,7 +32,7 @@
             margin-bottom: 20px; 
             display: flex; 
             align-items: flex-end; 
-            gap: 15px; /* Tampilan tombol dan select sejajar menyamping seperti di desktop */
+            gap: 15px; 
         }
 
         .select-group { flex: 1; }
@@ -63,17 +62,20 @@
         }
         .btn-database:hover { background-color: #27ae60; }
 
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; border: 1px solid #eee; font-size: 14px; table-layout: fixed; }
-        th { background: var(--primary); color: white; padding: 12px; position: sticky; top: 0; }
-        td { padding: 10px; border-bottom: 1px solid #eee; text-align: center; overflow: hidden; text-overflow: ellipsis; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; border: 1px solid #ccc; font-size: 12px; table-layout: fixed; }
+        th { background: var(--primary); color: white; padding: 8px 2px; border: 1px solid #34495e; }
+        td { padding: 8px 2px; border: 1px solid #eee; text-align: center; }
         tr:nth-child(even) { background-color: #f9f9f9; }
         
-        .name-col { text-align: left; font-weight: 500; width: 300px; }
-        .label-a { color: var(--danger); font-weight: bold; }
-        .label-s { color: var(--warning); font-weight: bold; }
-        .label-i { color: var(--success); font-weight: bold; }
-        .label-hadir { color: var(--primary); font-weight: bold; }
-        .label-persen { font-weight: bold; color: #2980b9; }
+        .name-col { text-align: left; font-weight: 500; width: 220px; padding-left: 10px; }
+        .tgl-col { width: 25px; font-size: 10px; background: #fcfcfc; }
+        .rekap-col { width: 45px; font-weight: bold; background: #f0f4f8; }
+        
+        .label-a { color: var(--danger); }
+        .label-s { color: var(--warning); }
+        .label-i { color: var(--success); }
+        .label-hadir { color: var(--primary); }
+        .label-persen { color: #2980b9; width: 60px !important; }
         
         .loading { text-align: center; font-style: italic; color: var(--accent); padding: 20px; }
         .error-msg { text-align: center; color: var(--danger); background: #fdf2f2; padding: 15px; border-radius: 8px; border: 1px solid #f9d7d7; }
@@ -126,11 +128,15 @@
             complete: function(results) {
                 const rows = results.data;
                 if (rows.length < 8) {
-                    statusEl.innerHTML = "<div class='error-msg'>Data pada sheet ini tidak ditemukan.</div>";
+                    statusEl.innerHTML = "<div class='error-msg'>Data tidak ditemukan.</div>";
                     return;
                 }
+                
+                // Ambil header tanggal dari baris ke-5 (index 4)
+                const headerTanggal = rows[4].slice(3, 34); 
                 const dataSiswa = rows.slice(7); 
-                tampilkanTabel(dataSiswa);
+                
+                tampilkanTabel(headerTanggal, dataSiswa);
                 statusEl.innerHTML = "";
             },
             error: function(err) {
@@ -139,17 +145,28 @@
         });
     }
 
-    function tampilkanTabel(data) {
+    function tampilkanTabel(tanggals, data) {
         let html = `<table>
             <thead>
                 <tr>
-                    <th width="50">No</th>
-                    <th class="name-col">Nama Siswa</th>
-                    <th width="60">A</th>
-                    <th width="60">S</th>
-                    <th width="60">I</th>
-                    <th width="80">Hadir</th>
-                    <th width="100">% Hadir</th>
+                    <th width="30" rowspan="2">No</th>
+                    <th class="name-col" rowspan="2">Nama Siswa</th>
+                    <th colspan="31">Tanggal</th>
+                    <th colspan="5">Rekapitulasi</th>
+                </tr>
+                <tr>`;
+        
+        // Header Tanggal 1-31
+        tanggals.forEach(tgl => {
+            html += `<th class="tgl-col">${tgl || ''}</th>`;
+        });
+
+        html += `
+                    <th class="rekap-col">A</th>
+                    <th class="rekap-col">S</th>
+                    <th class="rekap-col">I</th>
+                    <th class="rekap-col">H</th>
+                    <th class="label-persen">%</th>
                 </tr>
             </thead>
             <tbody>`;
@@ -161,11 +178,14 @@
             
             if (no && nama && !isNaN(no.trim()) && no.trim() !== "") {
                 counter++;
-                let a = 0, s = 0, i = 0, hadir = 0;
-                let hariEfektif = 0;
+                let a = 0, s = 0, i = 0, hadir = 0, hariEfektif = 0;
+                let tglCells = "";
 
+                // Loop Tanggal (Kolom D sampai AH / Index 3-33)
                 for (let j = 3; j <= 33; j++) {
                     let val = (row[j] || "").toString().trim().toUpperCase();
+                    tglCells += `<td class="tgl-col">${val}</td>`;
+                    
                     if (val !== "") {
                         hariEfektif++;
                         if (val === 'A') a++;
@@ -180,6 +200,7 @@
                 html += `<tr>
                     <td>${no}</td>
                     <td class="name-col">${nama}</td>
+                    ${tglCells}
                     <td class="label-a">${a}</td>
                     <td class="label-s">${s}</td>
                     <td class="label-i">${i}</td>
