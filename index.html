@@ -70,7 +70,6 @@
         th { background: var(--primary); color: white; padding: 5px 2px; border: 1px solid #34495e; text-transform: uppercase; }
         td { padding: 8px 2px; border: 1px solid #eee; text-align: center; }
         tr:nth-child(even) { background-color: #f9f9f9; }
-        tr:hover { background-color: #f1f4f6; }
         
         .name-col { text-align: left; font-weight: 500; width: 200px; padding-left: 10px; font-size: 12px; }
         .tgl-col { width: 30px; font-size: 10px; }
@@ -80,12 +79,11 @@
         .cell-a { background-color: #ffd7d7; color: var(--danger); font-weight: bold; }
         .cell-s { background-color: #fff4cc; color: #d68910; font-weight: bold; }
         .cell-i { background-color: #d5f5e3; color: var(--success); font-weight: bold; }
-        
-        .label-a { color: var(--danger); }
-        .label-s { color: #d68910; }
-        .label-i { color: var(--success); }
-        .label-persen { color: #2980b9; width: 55px !important; }
-        
+
+        /* Style untuk Tabel Bawah (39-43) */
+        .footer-table { margin-top: 30px; border: none; width: auto; min-width: 600px; margin-left: 0; }
+        .footer-table td { text-align: left; padding: 5px 15px; border: none; font-size: 12px; background: transparent !important; }
+
         .loading { text-align: center; font-style: italic; color: var(--accent); padding: 20px; }
         .error-msg { text-align: center; color: var(--danger); background: #fdf2f2; padding: 15px; border-radius: 8px; border: 1px solid #f9d7d7; }
     </style>
@@ -117,6 +115,7 @@
 
     <div id="status"></div>
     <div id="tabelHasil"></div>
+    <div id="tabelBawah"></div>
 </div>
 
 <script>
@@ -126,10 +125,12 @@
         const gid = document.getElementById('pilihKelas').value;
         const statusEl = document.getElementById('status');
         const tabelEl = document.getElementById('tabelHasil');
+        const bawahEl = document.getElementById('tabelBawah');
         const judulEl = document.getElementById('judulRekap');
         
         statusEl.innerHTML = "<div class='loading'>Sinkronisasi data...</div>";
         tabelEl.innerHTML = "";
+        bawahEl.innerHTML = "";
 
         const url = `https://docs.google.com/spreadsheets/d/${ssID}/export?format=csv&gid=${gid}&t=${new Date().getTime()}`;
 
@@ -143,8 +144,7 @@
                     return;
                 }
                 
-                // Mengambil Bulan dari B3 (index baris 2, index kolom 1)
-                // Mengambil Tahun dari B4 (index baris 3, index kolom 1)
+                // Ambil Bulan (B3) dan Tahun (B4)
                 const bulanData = rows[2][1] || "---"; 
                 const tahunData = rows[3][1] || "2026";
                 const namaKelas = document.getElementById('pilihKelas').options[document.getElementById('pilihKelas').selectedIndex].text;
@@ -153,9 +153,14 @@
 
                 const tglHeader = rows[4].slice(3, 34);  
                 const hariHeader = rows[5].slice(3, 34); 
-                const dataSiswa = rows.slice(7);         
+                const dataSiswa = rows.slice(7, 37); // Mengambil data siswa sampai baris 37 (asumsi max 30 siswa)
+                
+                // Ambil Data Baris 39-43 (Index 38-42)
+                const dataTambahan = rows.slice(38, 43);
                 
                 tampilkanTabel(tglHeader, hariHeader, dataSiswa);
+                tampilkanTabelBawah(dataTambahan);
+                
                 statusEl.innerHTML = "";
             },
             error: function(err) {
@@ -175,66 +180,46 @@
                 </tr>
                 <tr class="hari-row">`;
         
-        haris.forEach(hari => {
-            html += `<th class="tgl-col">${hari || ''}</th>`;
-        });
-
+        haris.forEach(hari => { html += `<th class="tgl-col">${hari || ''}</th>`; });
         html += `<th colspan="5" style="background:#ddd; color:#333">Total</th></tr><tr>`;
+        tanggals.forEach(tgl => { html += `<th class="tgl-col" style="background:#34495e">${tgl || ''}</th>`; });
 
-        tanggals.forEach(tgl => {
-            html += `<th class="tgl-col" style="background:#34495e">${tgl || ''}</th>`;
-        });
-
-        html += `
-                    <th class="rekap-col">A</th>
-                    <th class="rekap-col">S</th>
-                    <th class="rekap-col">I</th>
-                    <th class="rekap-col">H</th>
-                    <th class="label-persen">%</th>
-                </tr>
-            </thead>
-            <tbody>`;
+        html += `<th class="rekap-col">A</th><th class="rekap-col">S</th><th class="rekap-col">I</th><th class="rekap-col">H</th><th class="label-persen">%</th></tr></thead><tbody>`;
 
         let counter = 0;
         data.forEach((row) => {
             const no = row[0];   
             const nama = row[1]; 
-            
-            if (no && nama && !isNaN(no.trim()) && no.trim() !== "") {
+            if (no && nama && !isNaN(no.trim())) {
                 counter++;
-                let a = 0, s = 0, i = 0, hadir = 0, hariEfektif = 0;
-                let tglCells = "";
-
+                let a = 0, s = 0, i = 0, hadir = 0, hariEfektif = 0, tglCells = "";
                 for (let j = 3; j <= 33; j++) {
                     let val = (row[j] || "").toString().trim().toUpperCase();
-                    let cellClass = "";
-                    
-                    if (val === 'A') { a++; cellClass = "cell-a"; }
-                    else if (val === 'S') { s++; cellClass = "cell-s"; }
-                    else if (val === 'I') { i++; cellClass = "cell-i"; }
-                    else if (val !== "") { hadir++; }
-
+                    let cellClass = (val==='A')?"cell-a":(val==='S')?"cell-s":(val==='I')?"cell-i":"";
+                    if (val === 'A') a++; else if (val === 'S') s++; else if (val === 'I') i++; else if (val !== "") hadir++;
                     if (val !== "") hariEfektif++;
                     tglCells += `<td class="tgl-col ${cellClass}">${val}</td>`;
                 }
-
                 let persen = hariEfektif > 0 ? ((hadir / hariEfektif) * 100).toFixed(1) : 0;
-
-                html += `<tr>
-                    <td>${no}</td>
-                    <td class="name-col">${nama}</td>
-                    ${tglCells}
-                    <td class="label-a">${a}</td>
-                    <td class="label-s">${s}</td>
-                    <td class="label-i">${i}</td>
-                    <td class="label-hadir">${hadir}</td>
-                    <td class="label-persen">${persen}%</td>
-                </tr>`;
+                html += `<tr><td>${no}</td><td class="name-col">${nama}</td>${tglCells}<td>${a}</td><td>${s}</td><td>${i}</td><td>${hadir}</td><td class="label-persen">${persen}%</td></tr>`;
             }
         });
-
         html += '</tbody></table>';
-        document.getElementById('tabelHasil').innerHTML = (counter === 0) ? "<div class='error-msg'>Tidak ada data ditemukan.</div>" : html;
+        document.getElementById('tabelHasil').innerHTML = html;
+    }
+
+    function tampilkanTabelBawah(data) {
+        let html = `<table class="footer-table"><tbody>`;
+        data.forEach(row => {
+            html += `<tr>`;
+            // Hanya ambil kolom yang ada isinya (misal kolom A sampai H)
+            for(let i=0; i<10; i++) {
+                html += `<td>${row[i] || ''}</td>`;
+            }
+            html += `</tr>`;
+        });
+        html += `</tbody></table>`;
+        document.getElementById('tabelBawah').innerHTML = html;
     }
 
     window.onload = muatData;
