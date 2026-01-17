@@ -22,7 +22,7 @@
             min-width: 1450px; 
         }
 
-        /* --- ANIMASI & STYLE PERINGATAN ROTASI --- */
+        /* --- SIMBOL HP BERPUTAR (CSS ONLY) --- */
         #rotation-warning {
             display: none;
             position: fixed;
@@ -30,30 +30,55 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: #2c3e50;
+            background: rgba(44, 62, 80, 0.98);
             color: white;
             z-index: 99999;
             text-align: center;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 20px;
-            box-sizing: border-box;
         }
 
-        .phone-icon {
-            width: 80px;
-            height: 80px;
-            margin-bottom: 30px;
-            filter: invert(1);
-            animation: rotatePhone 2s ease-in-out infinite;
+        .phone-container {
+            width: 50px;
+            height: 90px;
+            border: 3px solid white;
+            border-radius: 6px;
+            position: relative;
+            margin-bottom: 40px;
+            animation: rotateDevice 2s ease-in-out infinite;
         }
 
-        /* Animasi memutar HP */
-        @keyframes rotatePhone {
+        /* Tombol Home di simbol HP */
+        .phone-container::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 8px;
+            border: 1px solid white;
+            border-radius: 50%;
+        }
+
+        /* Garis Speaker di simbol HP */
+        .phone-container::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 12px;
+            height: 2px;
+            background: white;
+            border-radius: 2px;
+        }
+
+        @keyframes rotateDevice {
             0% { transform: rotate(0deg); }
-            40% { transform: rotate(-90deg); }
-            60% { transform: rotate(-90deg); }
+            30% { transform: rotate(-90deg); }
+            70% { transform: rotate(-90deg); }
             100% { transform: rotate(0deg); }
         }
 
@@ -108,10 +133,10 @@
 <body>
 
 <div id="rotation-warning">
-    <img src="https://cdn-icons-png.flaticon.com/512/575/575454.png" class="phone-icon" alt="Rotate Icon">
-    <p style="font-family: sans-serif; line-height: 1.6; margin: 0 20px;">
-        <span style="font-size: 1.4em; font-weight: bold; color: var(--warning);">POSISI LAYAR KURANG TEPAT</span><br>
-        Silakan aktifkan <b>Rotasi Otomatis</b> dan putar HP menjadi <b>Lanskap / Mendatar</b> agar tabel absensi dapat terlihat sepenuhnya.
+    <div class="phone-container"></div>
+    <p style="font-family: sans-serif; line-height: 1.6; margin: 0 25px;">
+        <span style="font-size: 1.3em; font-weight: bold; color: var(--warning);">PUTAR LAYAR HP</span><br>
+        Aktifkan rotasi otomatis dan gunakan posisi <b>Lanskap / Mendatar</b> agar tabel dapat terbaca.
     </p>
 </div>
 
@@ -150,7 +175,6 @@
 
     function checkOrientation() {
         const warning = document.getElementById('rotation-warning');
-        // Mendeteksi jika tinggi layar lebih besar dari lebar (Portrait)
         if (window.innerHeight > window.innerWidth && window.innerWidth < 900) {
             warning.style.display = 'flex';
         } else {
@@ -158,7 +182,6 @@
         }
     }
 
-    // Jalankan pengecekan saat layar di-resize atau diputar
     window.addEventListener('resize', checkOrientation);
     window.addEventListener('orientationchange', checkOrientation);
 
