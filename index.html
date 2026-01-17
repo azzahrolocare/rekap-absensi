@@ -6,7 +6,14 @@
     <title>Rekap Absensi Digital - Az-Zahro</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <style>
-        :root { --primary: #2c3e50; --accent: #3498db; --success: #2ecc71; --warning: #f1c40f; --danger: #e74c3c; }
+        :root { 
+            --primary: #2c3e50; 
+            --accent: #3498db; 
+            --success: #27ae60; 
+            --warning: #f39c12; 
+            --danger: #e74c3c; 
+            --hadir: #2980b9;
+        }
         
         body { 
             font-family: 'Segoe UI', Arial, sans-serif; 
@@ -25,67 +32,70 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
         }
 
-        h2 { text-align: center; color: var(--primary); margin: 0; text-transform: uppercase; }
-        .school-name { text-align: center; color: var(--accent); font-weight: bold; margin-top: 5px; font-size: 1.2em; }
+        h2 { text-align: center; color: var(--primary); margin: 0; text-transform: uppercase; letter-spacing: 1px; }
+        .school-name { text-align: center; color: var(--accent); font-weight: bold; margin-top: 5px; font-size: 1.3em; }
         .subtitle { text-align: center; color: #7f8c8d; margin-bottom: 25px; font-size: 1.1em; font-weight: 500; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-top: 10px; }
         
         .controls { 
             margin-bottom: 20px; 
-            display: flex; 
-            align-items: flex-end; 
-            gap: 15px; 
             background: #f9f9f9;
             padding: 15px;
             border-radius: 8px;
             border: 1px solid #eee;
+            display: flex;
+            justify-content: center;
         }
 
-        .control-group { display: flex; flex-direction: column; gap: 5px; }
-        .flex-grow { flex-grow: 1; }
-
+        .control-group { display: flex; flex-direction: column; gap: 5px; width: 400px; }
         select { 
-            padding: 10px; 
+            padding: 12px; 
             border-radius: 6px; 
-            border: 1px solid #ddd; 
-            font-size: 14px; 
+            border: 2px solid #ddd; 
+            font-size: 15px; 
             background: white; 
             cursor: pointer;
+            font-weight: bold;
+            color: var(--primary);
         }
 
-        label { font-weight: bold; font-size: 13px; color: var(--primary); }
-        
-        .btn-database {
-            background-color: var(--success);
-            color: white;
-            text-decoration: none;
-            padding: 11px 20px;
-            border-radius: 6px;
-            font-weight: bold;
-            font-size: 14px;
-            transition: 0.3s;
-        }
-        .btn-database:hover { background-color: #27ae60; }
+        label { font-weight: bold; font-size: 14px; color: var(--primary); text-align: center; }
 
         table { width: 100%; border-collapse: collapse; margin-top: 10px; border: 1px solid #ccc; font-size: 11px; table-layout: fixed; }
-        th { background: var(--primary); color: white; padding: 5px 2px; border: 1px solid #34495e; text-transform: uppercase; }
+        th { background: var(--primary); color: white; padding: 6px 2px; border: 1px solid #34495e; text-transform: uppercase; }
         td { padding: 8px 2px; border: 1px solid #eee; text-align: center; }
-        tr:nth-child(even) { background-color: #f9f9f9; }
+        tr:nth-child(even) { background-color: #fcfcfc; }
+        tr:hover { background-color: #f1f4f6; }
         
-        .name-col { text-align: left; font-weight: 500; width: 200px; padding-left: 10px; font-size: 12px; }
-        .tgl-col { width: 30px; font-size: 10px; }
+        .name-col { text-align: left; font-weight: 500; width: 220px; padding-left: 10px; font-size: 12px; }
+        .tgl-col { width: 28px; font-size: 10px; color: #555; }
         .hari-row { background: #ecf0f1 !important; color: var(--primary); font-size: 9px; font-weight: bold; }
-        .rekap-col { width: 40px; font-weight: bold; background: #f0f4f8; font-size: 12px; }
         
-        .cell-a { background-color: #ffd7d7; color: var(--danger); font-weight: bold; }
-        .cell-s { background-color: #fff4cc; color: #d68910; font-weight: bold; }
-        .cell-i { background-color: #d5f5e3; color: var(--success); font-weight: bold; }
+        /* Pewarnaan Sel Absensi */
+        .cell-a { background-color: #ffd7d7 !important; color: var(--danger); font-weight: bold; }
+        .cell-s { background-color: #fff4cc !important; color: #d68910; font-weight: bold; }
+        .cell-i { background-color: #d5f5e3 !important; color: var(--success); font-weight: bold; }
 
-        #tabelBawah { margin-top: 30px; padding: 15px; background: #fff; border-top: 2px dashed #eee; }
-        .footer-table { width: 100%; border: none; table-layout: auto; }
-        .footer-table td { text-align: left; padding: 8px 5px; border: none; font-size: 13px; color: #2c3e50; }
+        /* Kolom Rekapitulasi (Total) */
+        .rekap-header { background: #34495e !important; }
+        .rekap-val { font-weight: bold; font-size: 13px; background: #f8f9fa; }
+        
+        .total-a { color: var(--danger); background: #fdf2f2 !important; border-left: 2px solid #eee; }
+        .total-s { color: var(--warning); background: #fef9e7 !important; }
+        .total-i { color: var(--success); background: #f4fef8 !important; }
+        .total-h { color: var(--hadir); background: #ebf5fb !important; }
+        .total-persen { 
+            background: var(--accent) !important; 
+            color: white !important; 
+            width: 60px !important; 
+            border-radius: 0;
+            font-size: 12px;
+        }
 
-        .loading { text-align: center; font-style: italic; color: var(--accent); padding: 20px; }
-        .error-msg { text-align: center; color: var(--danger); background: #fdf2f2; padding: 15px; border-radius: 8px; border: 1px solid #f9d7d7; }
+        #tabelBawah { margin-top: 40px; padding: 20px; border-top: 2px dashed #ccc; }
+        .footer-table { width: 100%; border: none; }
+        .footer-table td { text-align: left; padding: 5px; border: none; font-size: 13px; color: #333; }
+
+        .loading { text-align: center; font-style: italic; color: var(--accent); padding: 20px; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -96,8 +106,8 @@
     <p id="judulRekap" class="subtitle">TAHUN PELAJARAN 2026</p>
     
     <div class="controls">
-        <div class="control-group flex-grow">
-            <label>Pilih Jenjang Kelas:</label>
+        <div class="control-group">
+            <label>PILIH JENJANG KELAS</label>
             <select id="pilihKelas" onchange="muatData()">
                 <option value="1462101133">KELAS VII</option>
                 <option value="1467004494">KELAS VIII</option>
@@ -107,10 +117,6 @@
                 <option value="2001221833">KELAS XII</option>
             </select>
         </div>
-        
-        <a href="https://docs.google.com/spreadsheets/d/1XaVh_Jnbvryl216Mofuecx7DxNBezU3kRg8ZHjwu1qY/" target="_blank" class="btn-database">
-            📂 Data Base Absensi
-        </a>
     </div>
 
     <div id="status"></div>
@@ -128,48 +134,28 @@
         const bawahEl = document.getElementById('tabelBawah');
         const judulEl = document.getElementById('judulRekap');
         
-        statusEl.innerHTML = "<div class='loading'>Menghubungkan ke database...</div>";
-        tabelEl.innerHTML = "";
-        bawahEl.innerHTML = "";
+        statusEl.innerHTML = "<div class='loading'>🔄 Memperbarui Data...</div>";
 
         const url = `https://docs.google.com/spreadsheets/d/${ssID}/export?format=csv&gid=${gid}&t=${new Date().getTime()}`;
 
         Papa.parse(url, {
             download: true,
-            header: false,
             complete: function(results) {
                 const rows = results.data;
-                if (rows.length < 8) {
-                    statusEl.innerHTML = "<div class='error-msg'>Data tidak ditemukan.</div>";
-                    return;
-                }
-                
-                // Info Periode
                 const bulanData = rows[2][1] || "---"; 
                 const tahunData = rows[3][1] || "2026";
                 const namaKelas = document.getElementById('pilihKelas').options[document.getElementById('pilihKelas').selectedIndex].text;
+                
                 judulEl.innerText = `${namaKelas} - PERIODE ${bulanData.toUpperCase()} ${tahunData}`;
 
-                // HEADER TANGGAL dari D7:AH7 (Kolom D adalah index 3)
-                // Baris 7 di Sheet = Index 6 di JS
                 const tglHeader = rows[6].slice(3, 34);  
-                
-                // HEADER HARI (Asumsi berada di atas atau bawahnya, misal Baris 6)
                 const hariHeader = rows[5].slice(3, 34); 
-
-                // DATA SISWA (Mulai baris 8 / Index 7)
                 const dataSiswa = rows.slice(7, 37); 
-                
-                // DATA BAWAH 39-43
                 const dataTambahan = rows.slice(38, 43);
                 
                 tampilkanTabel(tglHeader, hariHeader, dataSiswa);
                 tampilkanDataBawah(dataTambahan);
-                
                 statusEl.innerHTML = "";
-            },
-            error: function(err) {
-                statusEl.innerHTML = `<div class='error-msg'><strong>Gagal Mengambil Data</strong></div>`;
             }
         });
     }
@@ -178,26 +164,24 @@
         let html = `<table>
             <thead>
                 <tr>
-                    <th width="35" rowspan="3">No</th>
+                    <th width="40" rowspan="3">No</th>
                     <th class="name-col" rowspan="3">Nama Siswa</th>
-                    <th colspan="31">Daftar Kehadiran Harian</th>
-                    <th colspan="5">Rekapitulasi</th>
+                    <th colspan="31">Kehadiran Harian</th>
+                    <th colspan="5" class="rekap-header">Total Rekapitulasi</th>
                 </tr>
                 <tr class="hari-row">`;
         
         haris.forEach(hari => { html += `<th class="tgl-col">${hari || ''}</th>`; });
-        html += `<th colspan="5" style="background:#ddd; color:#333">Total</th></tr><tr>`;
+        html += `<th class="rekap-val total-a">A</th><th class="rekap-val total-s">S</th><th class="rekap-val total-i">I</th><th class="rekap-val total-h">H</th><th class="total-persen">%</th></tr><tr>`;
         
         tanggals.forEach(tgl => { html += `<th class="tgl-col" style="background:#34495e">${tgl || ''}</th>`; });
-
-        html += `<th class="rekap-col">A</th><th class="rekap-col">S</th><th class="rekap-col">I</th><th class="rekap-col">H</th><th class="label-persen">%</th></tr></thead><tbody>`;
+        html += `<th colspan="5" style="background:#2c3e50; height:5px"></th></tr></thead><tbody>`;
 
         data.forEach((row) => {
             const no = row[0];   
             const nama = row[1]; 
             if (no && nama && !isNaN(no.trim())) {
                 let a = 0, s = 0, i = 0, hadir = 0, hariEfektif = 0, tglCells = "";
-                // Mengambil data dari kolom D (Index 3) sampai AH (Index 33)
                 for (let j = 3; j <= 33; j++) {
                     let val = (row[j] || "").toString().trim().toUpperCase();
                     let cellClass = (val==='A')?"cell-a":(val==='S')?"cell-s":(val==='I')?"cell-i":"";
@@ -206,7 +190,17 @@
                     tglCells += `<td class="tgl-col ${cellClass}">${val}</td>`;
                 }
                 let persen = hariEfektif > 0 ? ((hadir / hariEfektif) * 100).toFixed(1) : 0;
-                html += `<tr><td>${no}</td><td class="name-col">${nama}</td>${tglCells}<td>${a}</td><td>${s}</td><td>${i}</td><td>${hadir}</td><td class="label-persen">${persen}%</td></tr>`;
+                
+                html += `<tr>
+                    <td>${no}</td>
+                    <td class="name-col">${nama}</td>
+                    ${tglCells}
+                    <td class="rekap-val total-a">${a}</td>
+                    <td class="rekap-val total-s">${s}</td>
+                    <td class="rekap-val total-i">${i}</td>
+                    <td class="rekap-val total-h">${hadir}</td>
+                    <td class="rekap-val total-persen">${persen}%</td>
+                </tr>`;
             }
         });
         html += '</tbody></table>';
