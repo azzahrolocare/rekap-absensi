@@ -6,7 +6,7 @@
     <title>Rekap Absensi Digital - Az-Zahro</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <style>
-        :root { --primary: #2c3e50; --accent: #3498db; --success: #2ecc71; --warning: #f1c40f; --danger: #e74c3c; }
+        :root { --primary: #2c3e50; --accent: #3498db; --success: #2ecc71; --warning: #f1c40f; --danger: #e74c3c; --sunday: #ffeded; }
         
         body { 
             font-family: 'Segoe UI', Arial, sans-serif; 
@@ -44,25 +44,15 @@
         .flex-grow { flex-grow: 1; }
 
         select { 
-            padding: 10px; 
-            border-radius: 6px; 
-            border: 1px solid #ddd; 
-            font-size: 14px; 
-            background: white; 
-            cursor: pointer;
+            padding: 10px; border-radius: 6px; border: 1px solid #ddd; 
+            font-size: 14px; background: white; cursor: pointer;
         }
 
         label { font-weight: bold; font-size: 13px; color: var(--primary); }
         
         .btn-database {
-            background-color: var(--success);
-            color: white;
-            text-decoration: none;
-            padding: 11px 20px;
-            border-radius: 6px;
-            font-weight: bold;
-            font-size: 14px;
-            transition: 0.3s;
+            background-color: var(--success); color: white; text-decoration: none;
+            padding: 11px 20px; border-radius: 6px; font-weight: bold; font-size: 14px; transition: 0.3s;
         }
         .btn-database:hover { background-color: #27ae60; }
 
@@ -71,6 +61,10 @@
         td { padding: 8px 2px; border: 1px solid #eee; text-align: center; }
         tr:nth-child(even) { background-color: #f9f9f9; }
         
+        /* Pewarnaan Hari Minggu */
+        .minggu-head { background-color: var(--danger) !important; color: white !important; }
+        .minggu-cell { background-color: var(--sunday) !important; color: var(--danger) !important; font-weight: bold; }
+
         .name-col { text-align: left; font-weight: 500; width: 200px; padding-left: 10px; font-size: 12px; }
         .tgl-col { width: 30px; font-size: 10px; }
         .hari-row { background: #ecf0f1 !important; color: var(--primary); font-size: 9px; font-weight: bold; }
@@ -80,18 +74,9 @@
         .cell-s { background-color: #fff4cc; color: #d68910; font-weight: bold; }
         .cell-i { background-color: #d5f5e3; color: var(--success); font-weight: bold; }
 
-        /* Style Khusus Tabel Data Bawah (39-43) */
         #tabelBawah { margin-top: 30px; padding: 15px; background: #fff; border-top: 2px dashed #eee; }
         .footer-table { width: 100%; border: none; table-layout: auto; }
-        .footer-table td { 
-            text-align: left; 
-            padding: 8px 5px; 
-            border: none; 
-            font-size: 13px; 
-            color: #2c3e50;
-            background: transparent !important; 
-        }
-        .footer-row-bold { font-weight: bold; color: var(--primary); }
+        .footer-table td { text-align: left; padding: 8px 5px; border: none; font-size: 13px; color: #2c3e50; }
 
         .loading { text-align: center; font-style: italic; color: var(--accent); padding: 20px; }
         .error-msg { text-align: center; color: var(--danger); background: #fdf2f2; padding: 15px; border-radius: 8px; border: 1px solid #f9d7d7; }
@@ -124,7 +109,6 @@
 
     <div id="status"></div>
     <div id="tabelHasil"></div>
-    
     <div id="tabelBawah"></div>
 </div>
 
@@ -154,19 +138,15 @@
                     return;
                 }
                 
-                // Ambil Bulan (B3) dan Tahun (B4)
                 const bulanData = rows[2][1] || "---"; 
                 const tahunData = rows[3][1] || "2026";
                 const namaKelas = document.getElementById('pilihKelas').options[document.getElementById('pilihKelas').selectedIndex].text;
                 
                 judulEl.innerText = `${namaKelas} - PERIODE ${bulanData.toUpperCase()} ${tahunData}`;
 
-                // Tabel Utama
                 const tglHeader = rows[4].slice(3, 34);  
                 const hariHeader = rows[5].slice(3, 34); 
                 const dataSiswa = rows.slice(7, 37); 
-                
-                // Ambil Data Baris 39-43 (Index array 38 sampai 42)
                 const dataTambahan = rows.slice(38, 43);
                 
                 tampilkanTabel(tglHeader, hariHeader, dataSiswa);
@@ -191,24 +171,47 @@
                 </tr>
                 <tr class="hari-row">`;
         
-        haris.forEach(hari => { html += `<th class="tgl-col">${hari || ''}</th>`; });
+        // Baris Nama Hari (Sen, Sel, ..., Ming)
+        haris.forEach((hari, index) => { 
+            let isMinggu = (hari && hari.trim().toUpperCase() === "MING") || (hari && hari.trim().toUpperCase() === "MNG");
+            let cls = isMinggu ? "minggu-head" : "";
+            html += `<th class="tgl-col ${cls}">${hari || ''}</th>`; 
+        });
+
         html += `<th colspan="5" style="background:#ddd; color:#333">Total</th></tr><tr>`;
-        tanggals.forEach(tgl => { html += `<th class="tgl-col" style="background:#34495e">${tgl || ''}</th>`; });
+
+        // Baris Tanggal (1, 2, ..., 31)
+        tanggals.forEach((tgl, index) => { 
+            let hariSejajar = (haris[index] || "").trim().toUpperCase();
+            let isMinggu = (hariSejajar === "MING" || hariSejajar === "MNG");
+            let cls = isMinggu ? "minggu-head" : "";
+            html += `<th class="tgl-col ${cls}" style="${!isMinggu ? 'background:#34495e' : ''}">${tgl || ''}</th>`; 
+        });
 
         html += `<th class="rekap-col">A</th><th class="rekap-col">S</th><th class="rekap-col">I</th><th class="rekap-col">H</th><th class="label-persen">%</th></tr></thead><tbody>`;
 
-        let counter = 0;
         data.forEach((row) => {
             const no = row[0];   
             const nama = row[1]; 
             if (no && nama && !isNaN(no.trim())) {
-                counter++;
                 let a = 0, s = 0, i = 0, hadir = 0, hariEfektif = 0, tglCells = "";
                 for (let j = 3; j <= 33; j++) {
                     let val = (row[j] || "").toString().trim().toUpperCase();
-                    let cellClass = (val==='A')?"cell-a":(val==='S')?"cell-s":(val==='I')?"cell-i":"";
-                    if (val === 'A') a++; else if (val === 'S') s++; else if (val === 'I') i++; else if (val !== "") hadir++;
-                    if (val !== "") hariEfektif++;
+                    let hariIni = (haris[j-3] || "").trim().toUpperCase();
+                    let isMinggu = (hariIni === "MING" || hariIni === "MNG");
+                    
+                    let cellClass = "";
+                    if (isMinggu) {
+                        cellClass = "minggu-cell";
+                    } else {
+                        if (val === 'A') cellClass = "cell-a";
+                        else if (val === 'S') cellClass = "cell-s";
+                        else if (val === 'I') cellClass = "cell-i";
+                    }
+
+                    if (val === 'A') a++; else if (val === 'S') s++; else if (val === 'I') i++; else if (val !== "" && !isMinggu) hadir++;
+                    if (val !== "" && !isMinggu) hariEfektif++;
+                    
                     tglCells += `<td class="tgl-col ${cellClass}">${val}</td>`;
                 }
                 let persen = hariEfektif > 0 ? ((hadir / hariEfektif) * 100).toFixed(1) : 0;
@@ -221,16 +224,10 @@
 
     function tampilkanDataBawah(data) {
         if (!data || data.length === 0) return;
-
         let html = `<table class="footer-table"><tbody>`;
-        data.forEach((row, index) => {
+        data.forEach(row => {
             html += `<tr>`;
-            // Menampilkan semua kolom yang berisi data pada baris tersebut
-            row.forEach((cell, cellIndex) => {
-                // Memberikan penebalan jika sel mengandung teks tertentu (opsional)
-                let cellClass = (cell && cell.length > 15) ? "" : ""; 
-                html += `<td class="${cellClass}">${cell || ''}</td>`;
-            });
+            row.forEach(cell => { html += `<td>${cell || ''}</td>`; });
             html += `</tr>`;
         });
         html += `</tbody></table>`;
