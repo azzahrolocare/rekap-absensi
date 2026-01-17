@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=1450">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rekap Absensi Digital - Az-Zahro</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <style>
@@ -18,10 +18,9 @@
             font-family: 'Segoe UI', Arial, sans-serif; 
             background: #f4f7f6; 
             margin: 0; 
-            padding: 20px;
-            /* Mengunci lebar agar sistem melakukan zoom out */
-            width: 1450px; 
-            min-width: 1450px;
+            padding: 10px; /* Diperkecil agar lebih pas di layar HP */
+            width: 100%; 
+            box-sizing: border-box;
         }
 
         /* --- FITUR FULLSCREEN OVERLAY --- */
@@ -118,25 +117,28 @@
 
         @media only screen and (max-width: 900px) and (orientation: portrait) {
             #rotation-warning { display: flex; }
-            body { min-width: auto; overflow: hidden; }
+            body { overflow: hidden; }
             .container { display: none; }
         }
 
+        /* PERUBAHAN UTAMA: 1450px diganti menjadi 100% agar otomatis layar penuh */
         .container { 
-            width: 1450px; 
+            width: 100%; 
+            max-width: 100%;
             margin: auto; 
             background: white; 
-            padding: 25px; 
+            padding: 15px; 
             border-radius: 12px; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+            box-sizing: border-box;
         }
 
-        .header-wrapper { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding: 0 40px; }
-        .header-logo { width: 85px; height: auto; }
+        .header-wrapper { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding: 0 10px; }
+        .header-logo { width: 60px; height: auto; } /* Dikecilkan sedikit agar header pas */
         .header-text { text-align: center; flex-grow: 1; }
-        h2 { color: var(--primary); margin: 0; text-transform: uppercase; font-size: 1.8em; }
-        .school-name { color: var(--accent); font-weight: bold; margin-top: 5px; font-size: 1.4em; }
-        .subtitle { color: #7f8c8d; margin-top: 10px; font-size: 1.2em; font-weight: 500; border-bottom: 2px solid #eee; padding-bottom: 15px; }
+        h2 { color: var(--primary); margin: 0; text-transform: uppercase; font-size: 1.4em; }
+        .school-name { color: var(--accent); font-weight: bold; margin-top: 5px; font-size: 1.1em; }
+        .subtitle { color: #7f8c8d; margin-top: 10px; font-size: 1em; font-weight: 500; border-bottom: 2px solid #eee; padding-bottom: 15px; }
         
         .controls { 
             margin-bottom: 20px; 
@@ -144,64 +146,48 @@
             justify-content: space-between; 
             align-items: center; 
             background: #f9f9f9; 
-            padding: 15px 25px; 
+            padding: 10px 15px; 
             border-radius: 8px; 
             border: 1px solid #eee; 
         }
-        .control-group { display: flex; flex-direction: row; align-items: center; gap: 15px; }
+        .control-group { display: flex; flex-direction: row; align-items: center; gap: 10px; }
         
         .btn-refresh {
             background-color: var(--accent);
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 8px 15px;
             border-radius: 6px;
             cursor: pointer;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 12px;
             display: flex;
             align-items: center;
-            gap: 8px;
-            transition: all 0.3s ease;
+            gap: 5px;
             text-transform: uppercase;
         }
-
-        .btn-refresh:hover {
-            background-color: #2980b9;
-            box-shadow: 0 2px 8px rgba(52, 152, 219, 0.4);
-            transform: translateY(-1px);
-        }
-
-        .icon-refresh {
-            width: 14px;
-            height: 14px;
-            border: 2px solid #fff;
-            border-top: 2px solid transparent;
-            border-radius: 50%;
-        }
         
-        select { padding: 10px; border-radius: 6px; border: 1px solid #ddd; font-size: 14px; background: white; font-weight: bold; text-transform: uppercase; }
-        label { font-weight: bold; font-size: 14px; color: var(--primary); text-transform: uppercase; }
+        select { padding: 8px; border-radius: 6px; border: 1px solid #ddd; font-size: 12px; font-weight: bold; }
+        label { font-weight: bold; font-size: 12px; color: var(--primary); }
         
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; border: 1px solid #ccc; font-size: 11px; table-layout: fixed; }
-        th { background: var(--primary); color: white; padding: 5px 2px; border: 1px solid #34495e; text-transform: uppercase; }
-        td { padding: 8px 2px; border: 1px solid #eee; text-align: center; }
-        tr:nth-child(even) { background-color: #f9f9f9; }
-        .name-col { text-align: left; font-weight: 500; width: 220px; padding-left: 10px; font-size: 12px; }
-        .tgl-col { width: 30px; font-size: 10px; }
-        .hari-row { background: #ecf0f1 !important; color: var(--primary); font-size: 9px; font-weight: bold; }
-        .cell-a { background-color: #ffd7d7; color: var(--danger); font-weight: bold; }
-        .cell-s { background-color: #fff4cc; color: #d68910; font-weight: bold; }
-        .cell-i { background-color: #d5f5e3; color: var(--success); font-weight: bold; }
-        .rekap-col { width: 32px; font-weight: bold; font-size: 12px; border-left: 1px solid #ccc !important; }
-        .label-a { color: var(--danger); background: #fff1f1 !important; }
-        .label-s { color: #d68910; background: #fffdf0 !important; }
-        .label-i { color: var(--success); background: #f0fff4 !important; }
-        .label-h { color: #2980b9; background: #f0f7ff !important; }
-        .label-persen { color: #fff !important; background: #2980b9 !important; width: 45px !important; font-weight: bold; font-size: 11px; }
-        #tabelBawah { margin-top: 30px; padding: 15px; border-top: 2px dashed #eee; }
-        .footer-table { width: 100%; border: none; table-layout: auto; }
-        .footer-table td { text-align: left; padding: 5px; border: none; font-size: 13px; color: #333; }
+        /* Tabel dibuat lebar 100% dari layar tanpa scroll */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; border: 1px solid #ccc; font-size: 0.7em; table-layout: fixed; }
+        th { background: var(--primary); color: white; padding: 3px 1px; border: 1px solid #34495e; text-transform: uppercase; }
+        td { padding: 4px 1px; border: 1px solid #eee; text-align: center; }
+        
+        .name-col { text-align: left; font-weight: 500; width: 18%; padding-left: 5px; font-size: 0.9em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .tgl-col { width: 2.2%; font-size: 0.7em; }
+        .rekap-col { width: 2.5%; font-weight: bold; border-left: 1px solid #ccc !important; }
+        .label-persen { width: 4% !important; background: #2980b9 !important; color: white !important; }
+
+        .hari-row { background: #ecf0f1 !important; color: var(--primary); font-weight: bold; }
+        .cell-a { background-color: #ffd7d7; color: var(--danger); }
+        .cell-s { background-color: #fff4cc; color: #d68910; }
+        .cell-i { background-color: #d5f5e3; color: var(--success); }
+        
+        #tabelBawah { margin-top: 20px; padding: 10px; border-top: 2px dashed #eee; }
+        .footer-table { width: 100%; border: none; }
+        .footer-table td { text-align: left; padding: 3px; border: none; font-size: 11px; color: #333; }
         .loading { text-align: center; font-style: italic; color: var(--accent); padding: 20px; }
     </style>
 </head>
@@ -238,7 +224,7 @@
     
     <div class="controls">
         <div class="control-group">
-            <label>PILIH JENJANG KELAS :</label>
+            <label>KELAS:</label>
             <select id="pilihKelas" onchange="muatData()">
                 <option value="1462101133">KELAS VII</option>
                 <option value="1467004494">KELAS VIII</option>
@@ -251,7 +237,7 @@
 
         <button class="btn-refresh" onclick="muatData()">
             <span class="icon-refresh"></span>
-            REFRESH DATA
+            REFRESH
         </button>
     </div>
 
@@ -265,13 +251,9 @@
 
     function enableFullscreen() {
         const elem = document.documentElement;
-        if (elem.requestFullscreen) {
-            elem.requestFullscreen();
-        } else if (elem.webkitRequestFullscreen) { 
-            elem.webkitRequestFullscreen();
-        } else if (elem.msRequestFullscreen) { 
-            elem.msRequestFullscreen();
-        }
+        if (elem.requestFullscreen) { elem.requestFullscreen(); }
+        else if (elem.webkitRequestFullscreen) { elem.webkitRequestFullscreen(); }
+        else if (elem.msRequestFullscreen) { elem.msRequestFullscreen(); }
         
         document.getElementById('fullscreen-overlay').style.display = 'none';
         muatData(); 
@@ -330,15 +312,15 @@
         let html = `<table>
             <thead>
                 <tr>
-                    <th width="35" rowspan="3">No</th>
+                    <th style="width:3%" rowspan="3">No</th>
                     <th class="name-col" rowspan="3">Nama Siswa</th>
-                    <th colspan="31">Daftar Kehadiran Harian</th>
+                    <th colspan="31">Kehadiran</th>
                     <th colspan="5">Total</th>
                 </tr>
                 <tr class="hari-row">`;
         
         haris.forEach(hari => { html += `<th class="tgl-col">${hari || ''}</th>`; });
-        html += `<th class="rekap-col">A</th><th class="rekap-col">S</th><th class="rekap-col">I</th><th class="rekap-col">H</th><th class="label-persen">%</th></tr><tr>`;
+        html += `<th>A</th><th>S</th><th>I</th><th>H</th><th class="label-persen">%</th></tr><tr>`;
         
         tanggals.forEach(tgl => { html += `<th class="tgl-col" style="background:#34495e">${tgl || ''}</th>`; });
         html += `<th colspan="5" style="background:#2c3e50; height:5px"></th></tr></thead><tbody>`;
@@ -361,11 +343,11 @@
                     <td>${no}</td>
                     <td class="name-col">${nama}</td>
                     ${tglCells}
-                    <td class="rekap-col label-a">${a}</td>
-                    <td class="rekap-col label-s">${s}</td>
-                    <td class="rekap-col label-i">${i}</td>
-                    <td class="rekap-col label-h">${hadir}</td>
-                    <td class="rekap-col label-persen">${persen}%</td>
+                    <td class="rekap-col">${a}</td>
+                    <td class="rekap-col">${s}</td>
+                    <td class="rekap-col">${i}</td>
+                    <td class="rekap-col">${hadir}</td>
+                    <td class="rekap-col label-persen" style="color:white !important;">${persen}%</td>
                 </tr>`;
             }
         });
