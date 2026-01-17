@@ -19,9 +19,7 @@
             background: #f4f7f6; 
             margin: 0; 
             padding: 20px;
-            /* Perbaikan: Menggunakan min-width hanya pada container agar body tidak melar */
-            display: flex;
-            justify-content: center;
+            min-width: 1450px; 
         }
 
         /* --- FITUR FULLSCREEN OVERLAY --- */
@@ -58,12 +56,14 @@
             100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(52, 152, 219, 0); }
         }
 
-        /* --- SIMBOL HP BERPUTAR --- */
+        /* --- SIMBOL HP BERPUTAR (CSS ONLY) --- */
         #rotation-warning {
             display: none;
             position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
             background: rgba(44, 62, 80, 0.98);
             color: white;
             z-index: 99999;
@@ -74,12 +74,37 @@
         }
 
         .phone-container {
-            width: 50px; height: 90px;
+            width: 50px;
+            height: 90px;
             border: 3px solid white;
             border-radius: 6px;
             position: relative;
             margin-bottom: 40px;
             animation: rotateDevice 2s ease-in-out infinite;
+        }
+
+        .phone-container::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 8px;
+            border: 1px solid white;
+            border-radius: 50%;
+        }
+
+        .phone-container::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 12px;
+            height: 2px;
+            background: white;
+            border-radius: 2px;
         }
 
         @keyframes rotateDevice {
@@ -91,22 +116,19 @@
 
         @media only screen and (max-width: 900px) and (orientation: portrait) {
             #rotation-warning { display: flex; }
+            body { min-width: auto; overflow: hidden; }
             .container { display: none; }
         }
+        /* ----------------------------------------- */
 
-        /* --- CONTAINER UTAMA --- */
         .container { 
-            width: 1450px; /* Lebar tetap untuk tabel rekap */
+            width: 1450px; 
             margin: auto; 
             background: white; 
             padding: 25px; 
             border-radius: 12px; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
         }
-
-        /* Responsif Fullscreen: Mencegah elemen membesar berlebihan */
-        :fullscreen .container { zoom: 0.85; }
-        :-webkit-full-screen .container { zoom: 0.85; }
 
         .header-wrapper { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding: 0 40px; }
         .header-logo { width: 85px; height: auto; }
@@ -129,11 +151,37 @@
         
         .btn-refresh {
             background-color: var(--accent);
-            color: white; border: none; padding: 10px 20px; border-radius: 6px;
-            cursor: pointer; font-weight: bold; text-transform: uppercase;
-            display: flex; align-items: center; gap: 8px;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
         }
 
+        .btn-refresh:hover {
+            background-color: #2980b9;
+            box-shadow: 0 2px 8px rgba(52, 152, 219, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .icon-refresh {
+            width: 14px;
+            height: 14px;
+            border: 2px solid #fff;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+        }
+        
+        select { padding: 10px; border-radius: 6px; border: 1px solid #ddd; font-size: 14px; background: white; font-weight: bold; text-transform: uppercase; }
+        label { font-weight: bold; font-size: 14px; color: var(--primary); text-transform: uppercase; }
+        
         table { width: 100%; border-collapse: collapse; margin-top: 10px; border: 1px solid #ccc; font-size: 11px; table-layout: fixed; }
         th { background: var(--primary); color: white; padding: 5px 2px; border: 1px solid #34495e; text-transform: uppercase; }
         td { padding: 8px 2px; border: 1px solid #eee; text-align: center; }
@@ -145,9 +193,14 @@
         .cell-s { background-color: #fff4cc; color: #d68910; font-weight: bold; }
         .cell-i { background-color: #d5f5e3; color: var(--success); font-weight: bold; }
         .rekap-col { width: 32px; font-weight: bold; font-size: 12px; border-left: 1px solid #ccc !important; }
-        .label-persen { color: #fff !important; background: #2980b9 !important; width: 45px !important; font-weight: bold; }
+        .label-a { color: var(--danger); background: #fff1f1 !important; }
+        .label-s { color: #d68910; background: #fffdf0 !important; }
+        .label-i { color: var(--success); background: #f0fff4 !important; }
+        .label-h { color: #2980b9; background: #f0f7ff !important; }
+        .label-persen { color: #fff !important; background: #2980b9 !important; width: 45px !important; font-weight: bold; font-size: 11px; }
         #tabelBawah { margin-top: 30px; padding: 15px; border-top: 2px dashed #eee; }
-        .footer-table { width: 100%; border: none; font-size: 13px; }
+        .footer-table { width: 100%; border: none; table-layout: auto; }
+        .footer-table td { text-align: left; padding: 5px; border: none; font-size: 13px; color: #333; }
         .loading { text-align: center; font-style: italic; color: var(--accent); padding: 20px; }
     </style>
 </head>
@@ -165,7 +218,10 @@
 
 <div id="rotation-warning">
     <div class="phone-container"></div>
-    <p style="margin: 0 25px;"><b>PUTAR LAYAR HP</b><br>Gunakan posisi Lanskap agar tabel terbaca.</p>
+    <p style="font-family: sans-serif; line-height: 1.6; margin: 0 25px;">
+        <span style="font-size: 1.3em; font-weight: bold; color: var(--warning);">PUTAR LAYAR HP</span><br>
+        Aktifkan rotasi otomatis dan gunakan posisi <b>Lanskap / Mendatar</b> agar tabel dapat terbaca.
+    </p>
 </div>
 
 <div class="container">
@@ -191,7 +247,11 @@
                 <option value="2001221833">KELAS XII</option>
             </select>
         </div>
-        <button class="btn-refresh" onclick="muatData()">REFRESH DATA</button>
+
+        <button class="btn-refresh" onclick="muatData()">
+            <span class="icon-refresh"></span>
+            REFRESH DATA
+        </button>
     </div>
 
     <div id="status"></div>
@@ -202,20 +262,19 @@
 <script>
     const ssID = '1XaVh_Jnbvryl216Mofuecx7DxNBezU3kRg8ZHjwu1qY'; 
 
-    // REGISTRASI SERVICE WORKER
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js').catch(err => console.log(err));
-        });
-    }
-
+    // FUNGSI UNTUK AKTIFKAN FULLSCREEN
     function enableFullscreen() {
         const elem = document.documentElement;
-        if (elem.requestFullscreen) { elem.requestFullscreen(); }
-        else if (elem.webkitRequestFullscreen) { elem.webkitRequestFullscreen(); }
+        if (elem.requestFullscreen) {
+            elem.requestFullscreen();
+        } else if (elem.webkitRequestFullscreen) { /* Safari */
+            elem.webkitRequestFullscreen();
+        } else if (elem.msRequestFullscreen) { /* IE11 */
+            elem.msRequestFullscreen();
+        }
         
         document.getElementById('fullscreen-overlay').style.display = 'none';
-        muatData();
+        muatData(); // Jalankan muat data setelah fullscreen aktif
     }
 
     function checkOrientation() {
@@ -228,14 +287,21 @@
     }
 
     window.addEventListener('resize', checkOrientation);
+    window.addEventListener('orientationchange', checkOrientation);
 
     function muatData() {
         checkOrientation(); 
         const gid = document.getElementById('pilihKelas').value;
         const statusEl = document.getElementById('status');
-        const url = `https://docs.google.com/spreadsheets/d/${ssID}/export?format=csv&gid=${gid}&t=${new Date().getTime()}`;
-
+        const tabelEl = document.getElementById('tabelHasil');
+        const bawahEl = document.getElementById('tabelBawah');
+        const judulEl = document.getElementById('judulRekap');
+        
         statusEl.innerHTML = "<div class='loading'>Sinkronisasi data...</div>";
+        tabelEl.innerHTML = "";
+        bawahEl.innerHTML = "";
+
+        const url = `https://docs.google.com/spreadsheets/d/${ssID}/export?format=csv&gid=${gid}&t=${new Date().getTime()}`;
 
         Papa.parse(url, {
             download: true,
@@ -244,26 +310,45 @@
                 const rows = results.data;
                 const bulanData = rows[2][1] || "---"; 
                 const tahunData = rows[3][1] || "2026";
-                document.getElementById('judulRekap').innerText = `${document.getElementById('pilihKelas').options[document.getElementById('pilihKelas').selectedIndex].text} - PERIODE ${bulanData.toUpperCase()} ${tahunData}`;
+                const namaKelas = document.getElementById('pilihKelas').options[document.getElementById('pilihKelas').selectedIndex].text;
                 
-                tampilkanTabel(rows[6].slice(3, 34), rows[5].slice(3, 34), rows.slice(7, 37));
-                tampilkanDataBawah(rows.slice(38, 43));
+                judulEl.innerText = `${namaKelas} - PERIODE ${bulanData.toUpperCase()} ${tahunData}`;
+
+                const tglHeader = rows[6].slice(3, 34);  
+                const hariHeader = rows[5].slice(3, 34); 
+                const dataSiswa = rows.slice(7, 37); 
+                const dataTambahan = rows.slice(38, 43);
+                
+                tampilkanTabel(tglHeader, hariHeader, dataSiswa);
+                tampilkanDataBawah(dataTambahan);
                 statusEl.innerHTML = "";
             }
         });
     }
 
     function tampilkanTabel(tanggals, haris, data) {
-        let html = `<table><thead><tr><th width="35" rowspan="3">No</th><th class="name-col" rowspan="3">Nama Siswa</th><th colspan="31">Daftar Kehadiran Harian</th><th colspan="5">Total</th></tr><tr class="hari-row">`;
+        let html = `<table>
+            <thead>
+                <tr>
+                    <th width="35" rowspan="3">No</th>
+                    <th class="name-col" rowspan="3">Nama Siswa</th>
+                    <th colspan="31">Daftar Kehadiran Harian</th>
+                    <th colspan="5">Total</th>
+                </tr>
+                <tr class="hari-row">`;
+        
         haris.forEach(hari => { html += `<th class="tgl-col">${hari || ''}</th>`; });
         html += `<th class="rekap-col">A</th><th class="rekap-col">S</th><th class="rekap-col">I</th><th class="rekap-col">H</th><th class="label-persen">%</th></tr><tr>`;
+        
         tanggals.forEach(tgl => { html += `<th class="tgl-col" style="background:#34495e">${tgl || ''}</th>`; });
         html += `<th colspan="5" style="background:#2c3e50; height:5px"></th></tr></thead><tbody>`;
 
         data.forEach((row) => {
-            if (row[0] && row[1] && !isNaN(row[0].trim())) {
-                let a=0, s=0, i=0, hadir=0, hariEfektif=0, tglCells="";
-                for (let j=3; j<=33; j++) {
+            const no = row[0];   
+            const nama = row[1]; 
+            if (no && nama && !isNaN(no.trim())) {
+                let a = 0, s = 0, i = 0, hadir = 0, hariEfektif = 0, tglCells = "";
+                for (let j = 3; j <= 33; j++) {
                     let val = (row[j] || "").toString().trim().toUpperCase();
                     let cellClass = (val==='A')?"cell-a":(val==='S')?"cell-s":(val==='I')?"cell-i":"";
                     if (val === 'A') a++; else if (val === 'S') s++; else if (val === 'I') i++; else if (val !== "") hadir++;
@@ -271,10 +356,21 @@
                     tglCells += `<td class="tgl-col ${cellClass}">${val}</td>`;
                 }
                 let persen = hariEfektif > 0 ? Math.round((hadir / hariEfektif) * 100) : 0;
-                html += `<tr><td>${row[0]}</td><td class="name-col">${row[1]}</td>${tglCells}<td>${a}</td><td>${s}</td><td>${i}</td><td>${hadir}</td><td class="label-persen">${persen}%</td></tr>`;
+                
+                html += `<tr>
+                    <td>${no}</td>
+                    <td class="name-col">${nama}</td>
+                    ${tglCells}
+                    <td class="rekap-col label-a">${a}</td>
+                    <td class="rekap-col label-s">${s}</td>
+                    <td class="rekap-col label-i">${i}</td>
+                    <td class="rekap-col label-h">${hadir}</td>
+                    <td class="rekap-col label-persen">${persen}%</td>
+                </tr>`;
             }
         });
-        document.getElementById('tabelHasil').innerHTML = html + '</tbody></table>';
+        html += '</tbody></table>';
+        document.getElementById('tabelHasil').innerHTML = html;
     }
 
     function tampilkanDataBawah(data) {
@@ -284,10 +380,13 @@
             row.forEach(cell => { html += `<td>${cell || ''}</td>`; });
             html += `</tr>`;
         });
-        document.getElementById('tabelBawah').innerHTML = html + `</tbody></table>`;
+        html += `</tbody></table>`;
+        document.getElementById('tabelBawah').innerHTML = html;
     }
 
+    // Hanya jalankan checkOrientation di awal, muatData akan dipicu oleh Overlay Fullscreen
     window.onload = checkOrientation;
 </script>
+
 </body>
 </html>
