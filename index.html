@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Rekap Absensi Digital - Az-Zahro</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <style>
@@ -21,7 +21,7 @@
             padding: 20px;
         }
 
-        /* --- STYLE ASLI ANDA TETAP DIPERTAHANKAN --- */
+        /* CONTAINER ASLI ANDA (1450px) */
         .container { 
             width: 1450px; 
             margin: auto; 
@@ -31,6 +31,7 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
         }
 
+        /* HEADER ASLI ANDA */
         .header-wrapper {
             display: flex;
             align-items: center;
@@ -38,13 +39,13 @@
             margin-bottom: 20px;
             padding: 0 40px;
         }
-
         .header-logo { width: 85px; height: auto; }
         .header-text { text-align: center; flex-grow: 1; }
         h2 { color: var(--primary); margin: 0; text-transform: uppercase; font-size: 1.8em; }
         .school-name { color: var(--accent); font-weight: bold; margin-top: 5px; font-size: 1.4em; }
         .subtitle { color: #7f8c8d; margin-top: 10px; font-size: 1.2em; font-weight: 500; border-bottom: 2px solid #eee; padding-bottom: 15px; }
         
+        /* CONTROLS ASLI ANDA */
         .controls { 
             margin-bottom: 20px; 
             display: flex; 
@@ -54,11 +55,11 @@
             border-radius: 8px;
             border: 1px solid #eee;
         }
-
         .control-group { display: flex; flex-direction: column; gap: 5px; width: 350px; }
         select { padding: 10px; border-radius: 6px; border: 1px solid #ddd; font-size: 14px; background: white; font-weight: bold; }
         label { font-weight: bold; font-size: 13px; color: var(--primary); text-align: center; }
 
+        /* TABLE ASLI ANDA */
         table { width: 100%; border-collapse: collapse; margin-top: 10px; border: 1px solid #ccc; font-size: 11px; table-layout: fixed; }
         th { background: var(--primary); color: white; padding: 5px 2px; border: 1px solid #34495e; text-transform: uppercase; }
         td { padding: 8px 2px; border: 1px solid #eee; text-align: center; }
@@ -84,34 +85,42 @@
         .footer-table td { text-align: left; padding: 5px; border: none; font-size: 13px; color: #333; }
         .loading { text-align: center; font-style: italic; color: var(--accent); padding: 20px; }
 
-        /* --- TAMBAHAN NOTIFIKASI PUTAR HP --- */
+        /* NOTIFIKASI PUTAR HP (AGAR TIDAK NGEZOOM) */
         #rotate-notice {
             display: none;
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(44, 62, 80, 0.98);
-            z-index: 99999;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #2c3e50;
+            z-index: 999999;
             color: white;
             text-align: center;
             justify-content: center;
             align-items: center;
             flex-direction: column;
+            padding: 20px;
+            box-sizing: border-box;
         }
+
         .phone-icon {
-            width: 80px; height: 80px; margin-bottom: 20px;
+            width: 60px; height: 60px; margin-bottom: 20px;
             animation: rotateAnim 2s infinite ease-in-out;
         }
+
         @keyframes rotateAnim {
             0% { transform: rotate(0deg); }
             50% { transform: rotate(90deg); }
             100% { transform: rotate(0deg); }
         }
+
+        /* ATURAN SAAT MODE POTRET DI HP */
         @media screen and (max-width: 1000px) and (orientation: portrait) {
             #rotate-notice { display: flex; }
-            body { overflow: hidden; }
+            .container { display: none; } /* Sembunyikan container lebar agar tidak ngezoom */
+            body { background: #2c3e50; padding: 0; margin: 0; overflow: hidden; }
         }
-        /* Memungkinkan scroll horizontal jika layar lebih kecil dari 1450px */
-        .scroll-wrapper { width: 100%; overflow-x: auto; }
+
+        /* SCROLL HORIZONTAL (UNTUK MODE LANDSCAPE) */
+        .scroll-wrapper { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
     </style>
 </head>
 <body>
@@ -123,8 +132,8 @@
             <path d="M12 18h.01"></path>
         </svg>
     </div>
-    <h3>Gunakan Mode Landscape</h3>
-    <p>Mohon putar HP Anda untuk melihat rekap absensi.</p>
+    <h3 style="margin:0;">Gunakan Mode Landscape</h3>
+    <p style="opacity:0.8;">Mohon putar HP Anda untuk melihat rekap absensi.</p>
 </div>
 
 <div class="container">
