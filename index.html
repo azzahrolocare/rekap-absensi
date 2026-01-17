@@ -64,7 +64,7 @@
         td { padding: 8px 2px; border: 1px solid #eee; text-align: center; }
         tr:nth-child(even) { background-color: #f9f9f9; }
         
-        .name-col { text-align: left; font-weight: 500; width: 200px; padding-left: 10px; font-size: 12px; }
+        .name-col { text-align: left; font-weight: 500; width: 220px; padding-left: 10px; font-size: 12px; }
         .tgl-col { width: 30px; font-size: 10px; }
         .hari-row { background: #ecf0f1 !important; color: var(--primary); font-size: 9px; font-weight: bold; }
         
@@ -73,8 +73,8 @@
         .cell-s { background-color: #fff4cc; color: #d68910; font-weight: bold; }
         .cell-i { background-color: #d5f5e3; color: var(--success); font-weight: bold; }
         
-        /* Fokus Warna Rekapitulasi Total */
-        .rekap-col { width: 40px; font-weight: bold; font-size: 12px; border-left: 1px solid #ccc !important; }
+        /* Lebar Kolom Rekapitulasi yang dipaskan */
+        .rekap-col { width: 32px; font-weight: bold; font-size: 12px; border-left: 1px solid #ccc !important; }
         .label-a { color: var(--danger); background: #fff1f1 !important; }
         .label-s { color: #d68910; background: #fffdf0 !important; }
         .label-i { color: var(--success); background: #f0fff4 !important; }
@@ -82,8 +82,9 @@
         .label-persen { 
             color: #fff !important; 
             background: #2980b9 !important; 
-            width: 55px !important; 
+            width: 45px !important; /* Dipersempit agar pas */
             font-weight: bold;
+            font-size: 11px;
         }
         
         #tabelBawah { margin-top: 30px; padding: 15px; border-top: 2px dashed #eee; }
@@ -165,7 +166,7 @@
                     <th width="35" rowspan="3">No</th>
                     <th class="name-col" rowspan="3">Nama Siswa</th>
                     <th colspan="31">Daftar Kehadiran Harian</th>
-                    <th colspan="5">Total Rekapitulasi</th>
+                    <th colspan="5">Total</th>
                 </tr>
                 <tr class="hari-row">`;
         
@@ -187,7 +188,8 @@
                     if (val !== "") hariEfektif++;
                     tglCells += `<td class="tgl-col ${cellClass}">${val}</td>`;
                 }
-                let persen = hariEfektif > 0 ? ((hadir / hariEfektif) * 100).toFixed(1) : 0;
+                // Pembulatan tanpa desimal
+                let persen = hariEfektif > 0 ? Math.round((hadir / hariEfektif) * 100) : 0;
                 
                 html += `<tr>
                     <td>${no}</td>
