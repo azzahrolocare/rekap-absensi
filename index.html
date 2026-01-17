@@ -255,7 +255,7 @@
                 const tahunData = rows[3][1] || "2026";
                 const namaKelas = document.getElementById('pilihKelas').options[document.getElementById('pilihKelas').selectedIndex].text;
                 
-                judulEl.innerText = `${namaKelas} - PERIODE ${bulanData.toUpperCase()} ${tahunData}`;
+                judulEl.innerText = `${namaKelas} - BULAN ${bulanData.toUpperCase()} ${tahunData}`;
 
                 const tglHeader = rows[6].slice(3, 34);  
                 const hariHeader = rows[5].slice(3, 34); 
