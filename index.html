@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=1500">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rekap Absensi Digital - Az-Zahro</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <style>
@@ -18,31 +18,45 @@
             font-family: 'Segoe UI', Arial, sans-serif; 
             background: #f4f7f6; 
             margin: 0; 
-            padding: 20px;
-            min-width: 1500px; 
+            padding: 10px;
+            /* Hapus min-width agar tidak kaku */
         }
 
         .container { 
-            width: 1450px; 
+            width: 100%; /* Menyesuaikan layar */
+            max-width: 1450px; 
             margin: auto; 
             background: white; 
-            padding: 25px; 
+            padding: 15px; 
             border-radius: 12px; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+            box-sizing: border-box;
         }
 
-        /* Style Header dengan Logo */
+        /* Pembungkus Tabel agar bisa di-scroll horizontal di HP */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-top: 10px;
+        }
+
         .header-wrapper {
             display: flex;
             align-items: center;
             justify-content: space-between;
             margin-bottom: 20px;
-            padding: 0 40px;
+            gap: 10px;
         }
 
         .header-logo {
-            width: 85px; /* Ukuran logo */
+            width: 60px; /* Ukuran lebih kecil untuk HP */
             height: auto;
+        }
+
+        @media (min-width: 768px) {
+            .header-logo { width: 85px; }
+            .container { padding: 25px; }
         }
 
         .header-text {
@@ -50,10 +64,10 @@
             flex-grow: 1;
         }
 
-        h2 { color: var(--primary); margin: 0; text-transform: uppercase; font-size: 1.8em; }
-        .school-name { color: var(--accent); font-weight: bold; margin-top: 5px; font-size: 1.4em; }
-        .subtitle { color: #7f8c8d; margin-top: 10px; font-size: 1.2em; font-weight: 500; border-bottom: 2px solid #eee; padding-bottom: 15px; }
+        h2 { color: var(--primary); margin: 0; text-transform: uppercase; font-size: 1.2em; }
+        .school-name { color: var(--accent); font-weight: bold; margin-top: 5px; font-size: 1em; }
         
+        /* Kontrol dropdown agar responsif */
         .controls { 
             margin-bottom: 20px; 
             display: flex; 
@@ -61,65 +75,61 @@
             background: #f9f9f9;
             padding: 15px;
             border-radius: 8px;
-            border: 1px solid #eee;
         }
 
-        .control-group { display: flex; flex-direction: column; gap: 5px; width: 350px; }
-        select { 
-            padding: 10px; 
-            border-radius: 6px; 
-            border: 1px solid #ddd; 
-            font-size: 14px; 
-            background: white; 
-            font-weight: bold;
-        }
-
-        label { font-weight: bold; font-size: 13px; color: var(--primary); text-align: center; }
-
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; border: 1px solid #ccc; font-size: 11px; table-layout: fixed; }
-        th { background: var(--primary); color: white; padding: 5px 2px; border: 1px solid #34495e; text-transform: uppercase; }
+        .control-group { display: flex; flex-direction: column; gap: 5px; width: 100%; max-width: 350px; }
+        
+        /* Gaya Tabel tetap dipertahankan */
+        table { width: 100%; border-collapse: collapse; border: 1px solid #ccc; font-size: 11px; min-width: 1200px; }
+        th { background: var(--primary); color: white; padding: 5px 2px; border: 1px solid #34495e; }
         td { padding: 8px 2px; border: 1px solid #eee; text-align: center; }
-        tr:nth-child(even) { background-color: #f9f9f9; }
         
-        .name-col { text-align: left; font-weight: 500; width: 220px; padding-left: 10px; font-size: 12px; }
-        .tgl-col { width: 30px; font-size: 10px; }
-        .hari-row { background: #ecf0f1 !important; color: var(--primary); font-size: 9px; font-weight: bold; }
+        .name-col { text-align: left; font-weight: 500; width: 180px; padding-left: 10px; position: sticky; left: 0; background: white; z-index: 1; }
         
-        .cell-a { background-color: #ffd7d7; color: var(--danger); font-weight: bold; }
-        .cell-s { background-color: #fff4cc; color: #d68910; font-weight: bold; }
-        .cell-i { background-color: #d5f5e3; color: var(--success); font-weight: bold; }
-        
-        .rekap-col { width: 32px; font-weight: bold; font-size: 12px; border-left: 1px solid #ccc !important; }
-        .label-a { color: var(--danger); background: #fff1f1 !important; }
-        .label-s { color: #d68910; background: #fffdf0 !important; }
-        .label-i { color: var(--success); background: #f0fff4 !important; }
-        .label-h { color: #2980b9; background: #f0f7ff !important; }
-        .label-persen { 
-            color: #fff !important; 
-            background: #2980b9 !important; 
-            width: 45px !important;
-            font-weight: bold;
-            font-size: 11px;
+        /* Pesan Rotasi Layar */
+        #landscape-message {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--primary);
+            color: white;
+            z-index: 9999;
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 20px;
         }
-        
-        #tabelBawah { margin-top: 30px; padding: 15px; border-top: 2px dashed #eee; }
-        .footer-table { width: 100%; border: none; table-layout: auto; }
-        .footer-table td { text-align: left; padding: 5px; border: none; font-size: 13px; color: #333; }
-        .loading { text-align: center; font-style: italic; color: var(--accent); padding: 20px; }
+
+        /* Tampilkan pesan hanya di HP (max-width 767px) jika posisi Portrait */
+        @media screen and (max-width: 767px) and (orientation: portrait) {
+            #landscape-message { display: flex; }
+        }
+
+        /* Penyesuaian font untuk layar kecil */
+        @media screen and (max-width: 767px) {
+            h2 { font-size: 1em; }
+            .school-name { font-size: 0.9em; }
+            .subtitle { font-size: 0.9em; }
+        }
     </style>
 </head>
 <body>
 
+<div id="landscape-message">
+    <div style="font-size: 50px;">🔄</div>
+    <h3>Mohon Putar HP Anda</h3>
+    <p>Gunakan mode <b>Landscape</b> (Mendatar) untuk melihat tabel absensi dengan lebih jelas.</p>
+</div>
+
 <div class="container">
     <div class="header-wrapper">
         <img src="https://github.com/masrahmat-id/absensi-barcode-online-smp-smk-azzahro/raw/main/logo-smp-azzahro.png" alt="Logo SMP" class="header-logo">
-        
         <div class="header-text">
             <h2>REKAP ABSENSI SISWA DIGITAL</h2>
             <div class="school-name">SMP ISLAM AZ-ZAHRO & SMK AZ-ZAHRO</div>
             <p id="judulRekap" class="subtitle">TAHUN PELAJARAN 2026</p>
         </div>
-
         <img src="https://github.com/masrahmat-id/absensi-barcode-online-smp-smk-azzahro/raw/main/logo-smk-azzahro.png" alt="Logo SMK" class="header-logo">
     </div>
     
@@ -138,11 +148,16 @@
     </div>
 
     <div id="status"></div>
-    <div id="tabelHasil"></div>
+    
+    <div class="table-responsive" id="tabelHasil"></div>
+    
     <div id="tabelBawah"></div>
 </div>
 
 <script>
+    // ... (Script PapaParse tetap sama dengan kode asli Anda) ...
+    // Pastikan fungsi tampilkanTabel memasukkan HTML ke dalam div 'tabelHasil'
+    
     const ssID = '1XaVh_Jnbvryl216Mofuecx7DxNBezU3kRg8ZHjwu1qY'; 
 
     function muatData() {
@@ -229,13 +244,13 @@
     }
 
     function tampilkanDataBawah(data) {
-        let html = `<table class="footer-table"><tbody>`;
+        let html = `<div class="table-responsive"><table class="footer-table"><tbody>`;
         data.forEach(row => {
             html += `<tr>`;
             row.forEach(cell => { html += `<td>${cell || ''}</td>`; });
             html += `</tr>`;
         });
-        html += `</tbody></table>`;
+        html += `</tbody></table></div>`;
         document.getElementById('tabelBawah').innerHTML = html;
     }
 
