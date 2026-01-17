@@ -104,8 +104,54 @@
         .subtitle { color: #7f8c8d; margin-top: 10px; font-size: 1.2em; font-weight: 500; border-bottom: 2px solid #eee; padding-bottom: 15px; }
         
         /* MODIFIKASI DISINI: Membuat kontrol berjajar ke samping */
-        .controls { margin-bottom: 20px; display: flex; justify-content: flex-start; background: #f9f9f9; padding: 15px; border-radius: 8px; border: 1px solid #eee; }
-        .control-group { display: flex; flex-direction: row; align-items: center; gap: 15px; }
+        /* Update pada .controls untuk mendukung perataan kiri-kanan */
+.controls { 
+    margin-bottom: 20px; 
+    display: flex; 
+    justify-content: space-between; /* Membuat konten terpisah ke kiri dan kanan */
+    align-items: center; 
+    background: #f9f9f9; 
+    padding: 15px 25px; 
+    border-radius: 8px; 
+    border: 1px solid #eee; 
+}
+.control-group { display: flex; flex-direction: row; align-items: center; gap: 15px; }
+
+/* Gaya Tombol Refresh */
+.btn-refresh {
+    background-color: var(--accent);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+}
+
+.btn-refresh:hover {
+    background-color: #2980b9;
+    box-shadow: 0 2px 8px rgba(52, 152, 219, 0.4);
+    transform: translateY(-1px);
+}
+
+.btn-refresh:active {
+    transform: translateY(0);
+}
+
+/* Icon putar sederhana menggunakan CSS */
+.icon-refresh {
+    width: 14px;
+    height: 14px;
+    border: 2px solid #fff;
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+}
         
         select { padding: 10px; border-radius: 6px; border: 1px solid #ddd; font-size: 14px; background: white; font-weight: bold; text-transform: uppercase; }
         label { font-weight: bold; font-size: 14px; color: var(--primary); text-transform: uppercase; }
@@ -154,19 +200,24 @@
     </div>
     
     <div class="controls">
-        <div class="control-group">
-            <label>PILIH JENJANG KELAS :</label>
-            <select id="pilihKelas" onchange="muatData()">
-                <option value="1462101133">KELAS VII</option>
-                <option value="1467004494">KELAS VIII</option>
-                <option value="1595738719">KELAS IX</option>
-                <option value="881704821">KELAS X</option>
-                <option value="811189715">KELAS XI</option>
-                <option value="2001221833">KELAS XII</option>
-            </select>
-        </div>
+    <div class="control-group">
+        <label>PILIH JENJANG KELAS :</label>
+        <select id="pilihKelas" onchange="muatData()">
+            <option value="1462101133">KELAS VII</option>
+            <option value="1467004494">KELAS VIII</option>
+            <option value="1595738719">KELAS IX</option>
+            <option value="881704821">KELAS X</option>
+            <option value="811189715">KELAS XI</option>
+            <option value="2001221833">KELAS XII</option>
+        </select>
     </div>
 
+    <button class="btn-refresh" onclick="muatData()">
+        <span class="icon-refresh"></span>
+        REFRESH DATA
+    </button>
+</div>
+    
     <div id="status"></div>
     <div id="tabelHasil"></div>
     <div id="tabelBawah"></div>
